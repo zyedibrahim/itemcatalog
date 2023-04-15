@@ -46,7 +46,7 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
       setcartitem([perdata]);
       navigate("/checkoutpage");
     } else {
-      window.location.href = "/login";
+      navigate("/login");
     }
   };
   return (
