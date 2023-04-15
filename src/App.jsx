@@ -77,6 +77,14 @@ function App() {
             </ProtectedRouteMyprofile>
           }
         />
+        <Route
+          path="/myorders"
+          element={
+            <ProtectedRouteMyprofile>
+              <MyOrders />
+            </ProtectedRouteMyprofile>
+          }
+        />
 
         <Route path="/otpverify" element={<OtpVerify />} />
       </Routes>
@@ -104,6 +112,25 @@ function ProtectedRouteMyprofile({ children }) {
     </section>
   ) : (
     <Navigate to="/" />
+  );
+}
+function ProtectedRouteMyorder({ children }) {
+  return localStorage.getItem("token") ? (
+    <section>
+      <h1>this is profile page protected</h1>
+
+      {children}
+    </section>
+  ) : (
+    <Navigate to="/" />
+  );
+}
+
+function MyOrders() {
+  return (
+    <div className="text-white">
+      <h1>Ther is no order yet</h1>
+    </div>
   );
 }
 

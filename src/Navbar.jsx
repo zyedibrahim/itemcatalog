@@ -109,10 +109,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
 
               {localStorage.getItem("token") ? (
                 <li className="nav-item">
-                  <Link
-                    className="nav-link text-white"
-                    onClick={() => navigate("/")}
-                  >
+                  <Link className="nav-link text-white" to="/myorders">
                     <i className="me-2 fa-solid fa-bag-shopping"></i>
                     MYOrder
                   </Link>
