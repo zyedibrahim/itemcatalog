@@ -58,7 +58,7 @@ export function Login() {
         }, 3000);
       }
     } else {
-      window.location.href = "/home";
+      console.log("something went wrong");
     }
   };
 

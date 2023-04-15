@@ -59,7 +59,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
     }
   };
 
-  const [user, setuser] = useState("false");
+  // const [user, setuser] = useState("false");
 
   const loginc = () => {
     if (localStorage.getItem("token")) {
@@ -136,22 +136,21 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 {products.length === 0 ? "" : adddata.length}
               </button>
             </li>
-            <li className="nav-item">
-              <button
-                className="btn btn-nav  cart "
-                onClick={() => {
-                  setuser(!user);
-
-                  {
-                    user === "true" ? loginc() : loginc2();
-                  }
-                }}
-              >
-                <span className="nav-link text-white">
-                  <i className="fa-solid fa-arrow-right-to-bracket"></i>
-                </span>
-              </button>
-            </li>
+            {localStorage.getItem("token") ? (
+              <li className="nav-item">
+                <button
+                  onClick={() => {
+                    localStorage.clear();
+                    navigate("/home");
+                  }}
+                  className="btn btn-nav cart"
+                >
+                  logout
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
             {localStorage.getItem("token") ? (
               <li className="nav-item">
                 <button className="btn btn-nav cart">
@@ -161,7 +160,19 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 </button>
               </li>
             ) : (
-              ""
+              <li className="nav-item">
+                <button
+                  className="btn btn-nav  cart "
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
+                  <span className="nav-link text-white">
+                    {/* <i className="fa-solid fa-arrow-right-to-bracket"></i> */}
+                    login
+                  </span>
+                </button>
+              </li>
             )}
           </div>
 
