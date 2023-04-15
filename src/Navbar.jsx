@@ -59,17 +59,17 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
     }
   };
 
-  // const [user, setuser] = useState("false");
+  const [user, setuser] = useState("false");
 
-  const loginc = () => {
-    if (localStorage.getItem("token")) {
-      navigate("/home");
-    }
-  };
-  const loginc2 = () => {
-    localStorage.clear();
-    window.location.href = "/login";
-  };
+  // const loginc = () => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/home");
+  //   }
+  // };
+  // const loginc2 = () => {
+  //   localStorage.clear();
+  //   window.location.href = "/login";
+  // };
 
   const filterdel = (data) => {
     const dataddd = products?.filter((ele) => ele._id !== data);
@@ -149,7 +149,13 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 </button>
               </li>
             ) : (
-              ""
+              <li className="nav-item">
+                <button className="btn btn-nav cart">
+                  <Link className="nav-link text-white" to="/login">
+                    Login
+                  </Link>
+                </button>
+              </li>
             )}
             {localStorage.getItem("token") ? (
               <li className="nav-item">
@@ -160,19 +166,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 </button>
               </li>
             ) : (
-              <li className="nav-item">
-                <button
-                  className="btn btn-nav  cart "
-                  onClick={() => {
-                    navigate("/login");
-                  }}
-                >
-                  <span className="nav-link text-white">
-                    {/* <i className="fa-solid fa-arrow-right-to-bracket"></i> */}
-                    login
-                  </span>
-                </button>
-              </li>
+              ""
             )}
           </div>
 
