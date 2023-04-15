@@ -14,7 +14,7 @@ const formvalidationschema = yup.object({
 
 const formvalidationschemaforpasss = yup.object({
   old_password: yup.string().required("This is fiels is required"),
-  confirm_password: yup
+  new_password: yup
     .string()
     .required("This is fiels is required")
     .min(8, "Update your phone number"),
@@ -169,6 +169,9 @@ function UpdatePassword() {
               type="text"
               className="form-control"
             />
+            {errors.old_password && touched.old_password
+              ? errors.old_password
+              : ""}
           </div>
           <div className="mb-3">
             <label htmlFor="confirm_password" className="form-label">
@@ -182,6 +185,9 @@ function UpdatePassword() {
               type="text"
               className="form-control"
             />
+            {errors.new_password && touched.new_password
+              ? errors.new_password
+              : ""}
           </div>
           <div className="mb-3">
             <label htmlFor="confirm_newpassword" className="form-label">
@@ -195,6 +201,9 @@ function UpdatePassword() {
               type="text"
               className="form-control"
             />
+            {errors.confirm_newpassword && touched.confirm_newpassword
+              ? errors.confirm_newpassword
+              : ""}
           </div>
 
           <div className="mb-2">
