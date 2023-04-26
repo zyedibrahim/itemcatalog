@@ -1,21 +1,42 @@
 import { useState } from "react";
 
 export function MySelect() {
-  const [selectedOption, setSelectedOption] = useState("option1");
+  const [todos, setTodos] = useState([]);
+  const [newTodo, setNewTodo] = useState("");
 
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
-    console.log(selectedOption);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setTodos([...todos, newTodo]);
+    setNewTodo("");
+    console.log(todos, "todos");
+    console.log(newTodo, "newtodos");
+  };
+
+  const handleDelete = (index) => {
+    setTodos(todos.filter((_, i) => i !== index));
   };
 
   return (
     <div>
-      <select value={selectedOption} onChange={handleSelectChange}>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </select>
-      <p>You selected: {selectedOption}</p>
+      <h1>Todo List</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={newTodo}
+          onChange={(event) => setNewTodo(event.target.value)}
+        />
+        <button type="submit">Add Todo</button>
+      </form>
+      <ul className="text-white">
+        {todos?.map((todo, index) => (
+          <li key={index}>
+            {todo}{" "}
+            <button type="button" onClick={() => handleDelete(index)}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

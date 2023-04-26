@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { useNavigate, Link, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { API } from "../data";
 
 const formvalidationschema = yup.object({

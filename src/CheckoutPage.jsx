@@ -1,148 +1,430 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import * as yup from "yup";
+import { useFormik } from "formik";
+// import dataaddress from "./dataAddress";
+import { API } from "./data";
 
-import dataaddress from "./dataAddress";
+const formvalidationschemaaddress = yup.object({
+  country: yup.string().required("This is fiels is required"),
+  firstname: yup.string().required("First name is required"),
+  lastname: yup.string().required("Last name is required"),
+  address: yup.string().required("Address is required"),
+  state: yup.string().required("State is required"),
+  district: yup.string().required("District is required"),
+  pincode: yup.number().required("Pincode is required"),
+  phone: yup.number().required("Phone is required"),
+});
+const formvalidationschemaaddressedit = yup.object({
+  country: yup.string().required("This is fiels is required"),
+  firstname: yup.string().required("First name is required"),
+  lastname: yup.string().required("Last name is required"),
+  address: yup.string().required("Address is required"),
+  state: yup.string().required("State is required"),
+  district: yup.string().required("District is required"),
+  pincode: yup.number().required("Pincode is required"),
+  phone: yup.number().required("Phone is required"),
+});
 
 export function CheckoutPage({ cartitem, quantity }) {
-  const [selectdis, setselectdis] = useState();
-  const [country, setcountry] = useState();
-
-  const stateOptions = dataaddress?.states?.map((state, index) => (
-    <option key={index} value={state.state}>
-      {state.state}
-    </option>
-  ));
-
-  const districtOptions = dataaddress?.states[selectdis || 0].districts.map(
-    (dis, index) => (
-      <option key={index} value={dis}>
-        {dis}
-      </option>
-    )
-  );
-
-  console.log(cartitem, "from checkout");
-
   const [cprouduct, setcproduct] = useState([cartitem]);
+
+  const getid = localStorage.getItem("_id");
+  const [address, setaddress] = useState([]);
+  const getdata = async () => {
+    await fetch(`${API}/add/address/${getid}`)
+      .then((data) => data.json())
+      .then((data) => setaddress(data.addressdata))
+      .catch((err) => console.log(err));
+  };
+  console.log(address, "address");
+  useEffect(() => {
+    getdata();
+  }, []);
 
   useEffect(() => {
     setcproduct(cartitem);
   }, [cartitem]);
 
-  const totalPri = cprouduct.reduce(
-    (total, product) => total + product.price,
-    0
-  );
+  const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
+    useFormik({
+      initialValues: {
+        country: "",
 
-  const price = [...cprouduct];
+        firstname: "",
+        lastname: "",
+        address: "",
+        state: "",
+        district: "",
+        pincode: "",
+        phone: "",
+      },
+      validationSchema: formvalidationschemaaddress,
+      onSubmit: (data) => {
+        console.log(data);
+        storeaddressindb(data);
+      },
+    });
+  const [showButton, setShowButton] = useState(false);
+  const buttonRef = useRef(null);
 
-  const [firstnameval, setfirstnameval] = useState("");
-  const [lastnameval, setlastnameval] = useState("");
-  const [addressval, setaddressval] = useState("");
-  const [stateval, setstateval] = useState("");
-  const [districtval, setdistrictval] = useState("");
-  const [pincodeval, setpincodeval] = useState();
-  const [phoneval, setphoneval] = useState();
-
-  const handlechangestate = (e) => {
-    // const statvalue = e.target
-    if (country == "india") {
-      const selectedState = e.target.value;
-      const selectedIndex = dataaddress?.states?.findIndex(
-        (state) => state.state === selectedState
-      );
-
-      {
-        selectedIndex !== -1 ? setselectdis(selectedIndex) : 0;
-      }
-      setstateval(e.target.value);
-
-      // setselectdis(selectedIndex);
-      // console.log(selectdis, "selecteddies");
+  const storeaddressindb = async (data) => {
+    const idfrmstr = localStorage.getItem("_id");
+    const dataf = await fetch(`${API}/add/address/${idfrmstr}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const jsondata = await dataf.json();
+    console.log(jsondata);
+    if (jsondata.status === "200 ok") {
+      setShowButton(true);
+      getdata();
     }
   };
 
-  const handlechangeCountry = (e) => {
-    if (e.target.value !== "none") {
-      setcountry("india");
-    } else {
-      setcountry();
+  useEffect(() => {
+    if (showButton) {
+      buttonRef.current.click();
     }
-  };
-
-  const handlechangefn = (e) => {
-    setfirstnameval(e.target.value);
-  };
-  const handlechangeln = (e) => {
-    setlastnameval(e.target.value);
-  };
-  const handleChangeaddress = (e) => {
-    setaddressval(e.target.value);
-  };
-  const handleChangepincode = (e) => {
-    setpincodeval(e.target.value);
-  };
-  const handleChangephone = (e) => {
-    setphoneval(e.target.value);
-  };
-
-  const handleChangedistrict = (e) => {
-    setdistrictval(e.target.value);
-  };
-
-  const addresssubmit = (e) => {
-    e.preventDefault();
-
-    const dataaddress = {
-      country: country,
-      firstname: firstnameval,
-      lastname: lastnameval,
-      address: addressval,
-      state: stateval,
-      district: districtval,
-      pincode: pincodeval,
-      phone: phoneval,
-    };
-
-    console.log(dataaddress);
-  };
+  }, [showButton]);
 
   return (
     <div className="text-white container">
       <h1>checkout page</h1>
       <div className="row d-flex justify-content-center ">
-        <div className="col-12 col-md-2">
-          <button
-            type="button"
-            className="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
-          >
-            add address
-          </button>
+        <div className="col-12  mb-3 col-md-3 col-lg-3">
+          <div className="d-grid mt-5">
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >
+              add address
+            </button>
+          </div>
         </div>
+        <div className="col-12 mb-3 col-md-9 col-lg-9">
+          <Addadressfun
+            address={address}
+            quantity={quantity}
+            qun
+            cprouduct={cprouduct}
+          />
+        </div>
+      </div>
 
-        <div className="col-12 col-md-3">address</div>
+      {/* address template */}
+      <div
+        className="modal fade"
+        id="staticBackdrop"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabIndex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog text-dark mt-d">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                Add New Address
+              </h1>
+              <button
+                ref={buttonRef}
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="country"
+                        placeholder="Country"
+                        value={values.country}
+                        className="form-control mb-3"
+                        aria-label="form-select-lg example"
+                      />
+
+                      {touched.country && errors.country ? errors.country : ""}
+                    </div>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 col-md-6">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="firstname"
+                        value={values.firstname}
+                        type="text"
+                        placeholder="First Name"
+                        className="form-control"
+                      />
+                      {errors.firstname && touched.firstname
+                        ? errors.firstname
+                        : ""}
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="lastname"
+                        value={values.lastname}
+                        type="text"
+                        placeholder="Last Name"
+                        className="form-control"
+                      />
+                      {errors.lastname && touched.lastname
+                        ? errors.lastname
+                        : ""}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <textarea
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="address"
+                        value={values.address}
+                        placeholder="Address & arew and State"
+                        className="form-control"
+                        id="exampleFormControlTextarea1"
+                        rows="3"
+                      ></textarea>
+                      {errors.address && touched.address ? errors.address : ""}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12 col-md-4">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="state"
+                        value={values.state}
+                        type="text"
+                        placeholder="State"
+                        className="form-control"
+                      />
+                    </div>
+                    {errors.state && touched.state ? errors.state : ""}
+                  </div>
+                  <div className="col-12 col-md-4">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="district"
+                        value={values.district}
+                        type="text"
+                        placeholder="District"
+                        className="form-control"
+                      />
+                    </div>
+                    {errors.district && touched.district ? errors.district : ""}
+                  </div>
+                  <div className="col-12 col-md-4">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="pincode"
+                        value={values.pincode}
+                        type="number"
+                        placeholder="Pincode"
+                        className="form-control"
+                      />
+                      {errors.pincode && touched.pincode ? errors.pincode : ""}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3"></div>
+                    <input
+                      type="number"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="phone"
+                      value={values.phone}
+                      placeholder="Phone Number"
+                      className="form-control"
+                    />
+                    {errors.phone && touched.phone ? errors.phone : ""}
+                  </div>
+                </div>
+
+                <div className="modal-footer">
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    data-bs-dismiss="add"
+                  >
+                    Add
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const formvalidationschemapay = yup.object({
+  checkadd: yup.string().required("select address is required"),
+  payment: yup.string().required("select payment"),
+});
+
+function Addadressfun({ cprouduct, quantity, address }) {
+  const price = [...cprouduct];
+  const totalPri = cprouduct.reduce(
+    (total, product) => total + product.price,
+    0
+  );
+
+  const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
+    useFormik({
+      initialValues: {
+        checkadd: "",
+        payment: "",
+      },
+      validationSchema: formvalidationschemapay,
+      onSubmit: (data) => {
+        console.log(data, cprouduct, "products");
+      },
+    });
+
+  const [editdatafr, seteditdatafr] = useState([]);
+
+  function delefun() {}
+
+  function editfun(editdata) {
+    console.log(editdata);
+    seteditdatafr(editdata);
+  }
+
+  return (
+    <div>
+      <form
+        className="row d-flex justify-content-center"
+        onSubmit={handleSubmit}
+      >
+        <div className="col-12 mb-3 col-md-6">
+          {address?.map((ele, index) => {
+            return address !== "undefined" ? (
+              <div key={index}>
+                <div className="form-check">
+                  <input
+                    name="checkadd"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    className="form-check-input"
+                    type="radio"
+                    value={ele}
+                    id={`flexRadioDefault${index}`}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor={`flexRadioDefault${index}`}
+                  >
+                    <div>
+                      Name : {ele.firstname} {ele.lastname}
+                    </div>
+
+                    <div>
+                      Address : {ele.address} {ele.state}
+                      {ele.district}
+                    </div>
+                    <div>
+                      Pincode:
+                      {ele.pincode}
+                    </div>
+                    <div>Phone : {ele.phone}</div>
+                  </label>
+                  <div className="config-con mt-2 mb-2 d-flex gap-3">
+                    {/* edit button address */}
+                    <button
+                      className="btn btn-success"
+                      type="button"
+                      onClick={() => editfun(ele)}
+                      data-bs-toggle="modal"
+                      data-bs-target="#staticBackdrop1"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => console.log(index)}
+                      className="btn btn-danger"
+                    >
+                      del
+                    </button>
+                  </div>
+                  <EditAddress editdatafr={editdatafr} />
+                </div>
+                {touched.checkadd && errors.checkadd ? errors.checkadd : ""}
+              </div>
+            ) : (
+              <h1 className="text-white">Please Add Address</h1>
+            );
+          })}
+        </div>
         <div className="col-12 col-md-6">
           <div className="mb-3">
             <h3>Payment Mode</h3>
             <select
-              defaultValue="Offline Payment"
+              onChange={handleChange}
+              value={values.payment}
+              onBlur={handleBlur}
+              name="payment"
+              defaultValue="Offlinepay"
               className="form-select form-select-lg mb-3"
-              aria-label=".form-select-lg example"
+              aria-label="form-select-lg example"
             >
-              <option>Select Payment</option>
-              <option value="1">Online Payment</option>
-              <option value="2">Offline Payment</option>
+              <option value="onlinepay">Online Payment</option>
+              <option value="offlinepay">Offline Payment</option>
             </select>
+            <div className="mb-3">
+              {touched.payment && errors.payment ? errors.payment : ""}
+            </div>
 
             <div className="h4">Order summary</div>
           </div>
 
           <div className="place-ordercon">
-            {cprouduct?.map((ele) => {
+            {cprouduct?.map((ele, index) => {
               return (
                 <div
-                  key={ele._id}
+                  key={index}
                   className="con-2-inside d-flex justify-content-between"
                 >
                   <div className="middle-con d-flex">
@@ -176,151 +458,224 @@ export function CheckoutPage({ cartitem, quantity }) {
             </div>
 
             <div className="d-grid mb-3 mt-3">
-              <button className="btn btn-secondary">
+              <button type="submit" className="btn btn-secondary">
                 <i className="me-2 fa-solid fa-lock"></i>
                 Place Order
               </button>
             </div>
           </div>
         </div>
-      </div>
-      <div
-        className="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog text-dark mt-d">
-          <div className="modal-content">
-            <form onSubmit={addresssubmit}>
-              <div className="modal-header">
-                <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                  Add New Address
-                </h1>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body">
-                <div className="row">
-                  <div className="col-12">
-                    <div className="mb-3">
-                      <select
-                        onChange={handlechangeCountry}
-                        className="form-select form-select-lg mb-3"
-                        aria-label="form-select-lg example"
-                      >
-                        <option Value="none">Select Country</option>
-                        <option value="india">India</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 col-md-6">
-                    <div className="mb-3">
-                      <input
-                        onChange={handlechangefn}
-                        type="text"
-                        placeholder="First Name"
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                  <div className="col-12 col-md-6">
-                    <div className="mb-3">
-                      <input
-                        onChange={handlechangeln}
-                        type="text"
-                        placeholder="Last Name"
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                </div>
+      </form>
+    </div>
+  );
+}
 
-                <div className="row">
-                  <div className="col-12">
-                    <div className="mb-3">
-                      <textarea
-                        onChange={handleChangeaddress}
-                        placeholder="Address & arew and State"
-                        className="form-control"
-                        id="exampleFormControlTextarea1"
-                        rows="3"
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
+function EditAddress({ editdatafr }) {
+  return editdatafr ? (
+    <Addaddress editdatafr={editdatafr} />
+  ) : (
+    <h1 className="text-white">Loading...</h1>
+  );
+}
 
-                <div className="row">
-                  <div className="col-12 col-md-4">
-                    <div className="mb-3">
-                      <select
-                        onClick={handlechangestate}
-                        className="form-select form-select mb-3"
-                        aria-label=".form-select-lg example"
-                      >
-                        <option selected value="Tamil Nadu">
-                          Select State
-                        </option>
-                        {country === "india" && stateOptions
-                          ? stateOptions
-                          : ""}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-12 col-md-4">
-                    <div className="mb-3">
-                      <select
-                        onChange={handleChangedistrict}
-                        className="form-select form-select mb-3"
-                        aria-label=".form-select example"
-                      >
-                        <option value="" selected>
-                          Select District
-                        </option>
+function Addaddress({ editdatafr }) {
+  // const [getaddress, setaddress] = useState([]);
 
-                        {country == "india" ? districtOptions : ""}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="col-12 col-md-4">
-                    <div className="mb-3">
-                      <input
-                        onChange={handleChangepincode}
-                        type="number"
-                        placeholder="Pincode"
-                        className="form-control"
-                      />
-                    </div>
-                  </div>
-                </div>
+  console.log(editdatafr.country, "from adddaress");
 
-                <div className="row">
-                  <div className="col-12">
+  // const idfrmstr = localStorage.getItem("_id");
+
+  // // const getcontact = async () => {
+  // //   const apidata = await fetch(`${API}/add/address/${idfrmstr}`);
+  // //   const data = await apidata.json();
+  // //   setaddress(data.addressdata);
+  // // };
+
+  // // useEffect(() => {
+  // //   getcontact();
+  // // }, []);
+
+  // console.log(getaddress, "getaddress");
+  const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
+    useFormik({
+      initialValues: {
+        country: editdatafr?.country,
+        firstname: editdatafr?.firstname,
+        lastname: editdatafr?.lastname,
+        address: editdatafr?.address,
+        state: editdatafr?.state,
+        district: editdatafr?.district,
+        pincode: editdatafr?.pincode,
+        phone: editdatafr?.phone,
+      },
+      validationSchema: formvalidationschemaaddressedit,
+      onSubmit: (data) => {
+        console.log(data);
+      },
+    });
+
+  return (
+    <div
+      className="modal fade"
+      id="staticBackdrop1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabIndex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div className="modal-dialog text-dark mt-d">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h1 className="modal-title fs-5" id="staticBackdropLabel">
+              Edit Address
+            </h1>
+            <button
+              // ref={buttonRef}
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div className="modal-body">
+            <form onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col-12">
+                  <div className="mb-3">
                     <input
-                      type="number"
-                      onChange={handleChangephone}
-                      placeholder="Phone Number"
+                      type="text"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="country"
+                      placeholder="Country"
+                      value={values.country}
+                      className="form-control mb-3"
+                      aria-label="form-select-lg example"
+                    />
+
+                    {touched.country && errors.country ? errors.country : ""}
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12 col-md-6">
+                  <div className="mb-3">
+                    <input
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="firstname"
+                      value={values.firstname}
+                      type="text"
+                      placeholder="First Name"
+                      className="form-control"
+                    />
+                    {errors.firstname && touched.firstname
+                      ? errors.firstname
+                      : ""}
+                  </div>
+                </div>
+                <div className="col-12 col-md-6">
+                  <div className="mb-3">
+                    <input
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="lastname"
+                      value={values.lastname}
+                      type="text"
+                      placeholder="Last Name"
+                      className="form-control"
+                    />
+                    {errors.lastname && touched.lastname ? errors.lastname : ""}
+                  </div>
+                </div>
+              </div>
+
+              <div className="row">
+                <div className="col-12">
+                  <div className="mb-3">
+                    <textarea
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="address"
+                      value={values.address}
+                      placeholder="Address & arew and State"
+                      className="form-control"
+                      id="exampleFormControlTextarea1"
+                      rows="3"
+                    ></textarea>
+                    {errors.address && touched.address ? errors.address : ""}
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12 col-md-4">
+                  <div className="mb-3">
+                    <input
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="state"
+                      value={values.state}
+                      type="text"
+                      placeholder="State"
                       className="form-control"
                     />
                   </div>
+                  {errors.state && touched.state ? errors.state : ""}
+                </div>
+                <div className="col-12 col-md-4">
+                  <div className="mb-3">
+                    <input
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="district"
+                      value={values.district}
+                      type="text"
+                      placeholder="District"
+                      className="form-control"
+                    />
+                  </div>
+                  {errors.district && touched.district ? errors.district : ""}
+                </div>
+                <div className="col-12 col-md-4">
+                  <div className="mb-3">
+                    <input
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="pincode"
+                      value={values.pincode}
+                      type="number"
+                      placeholder="Pincode"
+                      className="form-control"
+                    />
+                    {errors.pincode && touched.pincode ? errors.pincode : ""}
+                  </div>
                 </div>
               </div>
+
+              <div className="row">
+                <div className="col-12">
+                  <div className="mb-3"></div>
+                  <input
+                    type="number"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    name="phone"
+                    value={values.phone}
+                    placeholder="Phone Number"
+                    className="form-control"
+                  />
+                  {errors.phone && touched.phone ? errors.phone : ""}
+                </div>
+              </div>
+
               <div className="modal-footer">
                 <button
                   type="submit"
-                  className="btn btn-primary"
-                  data-bs-dismiss="add"
+                  className="btn btn-success"
+                  data-bs-dismiss="update"
                 >
-                  Add
+                  Update
                 </button>
                 <button
                   type="button"
