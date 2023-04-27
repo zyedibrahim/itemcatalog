@@ -198,3 +198,13 @@ object-fit: contain;
   .c-p{
     background-color: transparent;
   }
+
+
+  .img-con-ad{
+    height: 60px;
+    width: 60px;
+  }
+  .img-ad{
+    height: 60px;
+    width: 60px;
+  }

@@ -136,7 +136,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                   <Link
                     className="nav-link clr-org active text-white "
                     aria-current="page"
-                    to="/adminproduct"
+                    to="/adminproducts"
                   >
                     <i className="me-2 fa-solid fa-house-user"></i>
                     Product
@@ -164,7 +164,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                   <Link
                     className="nav-link clr-org active text-white "
                     aria-current="page"
-                    to="/adminuser"
+                    to="/adminpageusers"
                   >
                     <i className="me-2 fa-solid fa-house-user"></i>
                     Users

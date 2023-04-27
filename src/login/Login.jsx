@@ -3,6 +3,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate, Link } from "react-router-dom";
 import { API } from "../data";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const formvalidationschema = yup.object({
   username: yup.string().required("This is fiels is required"),
@@ -43,22 +45,27 @@ export function Login() {
     });
     const jsondata = await dataf.json();
     console.log(jsondata);
+    const notifysuccess = (data) => toast.success(data);
+    const notifyfail = (data) => toast.error(data);
+
     if (jsondata.status === "Login successful") {
       if (!jsondata.token) {
         localStorage.setItem("adtoken", jsondata.adtoken);
+        notifysuccess(jsondata.status);
         setTimeout(() => {
           navigate("/dashboard");
-        }, 2000);
+        }, 3000);
       } else {
         localStorage.setItem("token", jsondata.token);
         localStorage.setItem("username", jsondata.username);
         localStorage.setItem("_id", jsondata._id);
+        notifysuccess(jsondata.status);
         setTimeout(() => {
           navigate("/product");
         }, 3000);
       }
     } else {
-      console.log("something went wrong");
+      notifyfail("something went wrong");
     }
   };
 
@@ -193,6 +200,7 @@ export function Login() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

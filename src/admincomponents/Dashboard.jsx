@@ -75,7 +75,7 @@ export function Dashboard() {
       </div>
 
       <div className="table-responsive">
-        <table class="table  text-light">
+        <table className="table  text-light">
           <thead>
             <tr className="text-center">
               <th scope="col">#</th>

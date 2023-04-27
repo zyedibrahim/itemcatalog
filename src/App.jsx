@@ -15,6 +15,8 @@ import { MyProfile } from "./login/MyProfile";
 import { OtpVerify } from "./createuser/OtpVerify.jsx";
 import { Dashboard } from "./admincomponents/Dashboard.jsx";
 import { CatagoriesPage } from "./admincomponents/CatagoriesPage";
+import { AdminuserProduct } from "./admincomponents/AdminuserProduct";
+import { AdminuserPageUsers } from "./admincomponents/AdminuserPageUsers";
 
 function App() {
   const [adddata, setadddata] = useState([]);
@@ -104,6 +106,22 @@ function App() {
             </ProtectedRoutAdminCatagoriesPage>
           }
         />
+        <Route
+          path="/adminproducts"
+          element={
+            <ProtectedRoutAdminProductPage>
+              <AdminuserProduct />
+            </ProtectedRoutAdminProductPage>
+          }
+        />
+        <Route
+          path="/adminpageusers"
+          element={
+            <ProtectedRoutAdminPageUsers>
+              <AdminuserPageUsers />
+            </ProtectedRoutAdminPageUsers>
+          }
+        />
 
         <Route path="/otpverify" element={<OtpVerify />} />
       </Routes>
@@ -111,6 +129,15 @@ function App() {
   );
 }
 
+function ProtectedRoutAdminPageUsers({ children }) {
+  return localStorage.getItem("adtoken") ? (
+    <section className="text-white">
+      <div>{children}</div>
+    </section>
+  ) : (
+    <Navigate replace to="/" />
+  );
+}
 function ProtectedRoutAdminDashboardPage({ children }) {
   return localStorage.getItem("adtoken") ? (
     <section className="text-white">
@@ -121,6 +148,15 @@ function ProtectedRoutAdminDashboardPage({ children }) {
   );
 }
 function ProtectedRoutAdminCatagoriesPage({ children }) {
+  return localStorage.getItem("adtoken") ? (
+    <section className="text-white">
+      <div>{children}</div>
+    </section>
+  ) : (
+    <Navigate replace to="/" />
+  );
+}
+function ProtectedRoutAdminProductPage({ children }) {
   return localStorage.getItem("adtoken") ? (
     <section className="text-white">
       <div>{children}</div>
