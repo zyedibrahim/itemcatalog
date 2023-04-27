@@ -13,6 +13,8 @@ import { MySelect } from "./MySelect";
 import { AdminuserPage } from "./admincomponents/AdminuserPage";
 import { MyProfile } from "./login/MyProfile";
 import { OtpVerify } from "./createuser/OtpVerify.jsx";
+import { Dashboard } from "./admincomponents/Dashboard.jsx";
+import { CatagoriesPage } from "./admincomponents/CatagoriesPage";
 
 function App() {
   const [adddata, setadddata] = useState([]);
@@ -86,10 +88,45 @@ function App() {
             </ProtectedRouteMyprofile>
           }
         />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoutAdminDashboardPage>
+              <Dashboard />
+            </ProtectedRoutAdminDashboardPage>
+          }
+        />
+        <Route
+          path="/admincatagories"
+          element={
+            <ProtectedRoutAdminCatagoriesPage>
+              <CatagoriesPage />
+            </ProtectedRoutAdminCatagoriesPage>
+          }
+        />
 
         <Route path="/otpverify" element={<OtpVerify />} />
       </Routes>
     </div>
+  );
+}
+
+function ProtectedRoutAdminDashboardPage({ children }) {
+  return localStorage.getItem("adtoken") ? (
+    <section className="text-white">
+      <div>{children}</div>
+    </section>
+  ) : (
+    <Navigate replace to="/" />
+  );
+}
+function ProtectedRoutAdminCatagoriesPage({ children }) {
+  return localStorage.getItem("adtoken") ? (
+    <section className="text-white">
+      <div>{children}</div>
+    </section>
+  ) : (
+    <Navigate replace to="/" />
   );
 }
 

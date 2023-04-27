@@ -27,7 +27,7 @@ export function Login() {
   const navigate = useNavigate();
 
   setInterval(() => {
-    if (!localStorage.getItem("token") || localStorage.getItem("adtoken")) {
+    if (!localStorage.getItem("token") || !localStorage.getItem("adtoken")) {
       window.location.href = "/home";
     }
     console.log("happens");
@@ -47,7 +47,7 @@ export function Login() {
       if (!jsondata.token) {
         localStorage.setItem("adtoken", jsondata.adtoken);
         setTimeout(() => {
-          navigate("/adminPage");
+          navigate("/dashboard");
         }, 2000);
       } else {
         localStorage.setItem("token", jsondata.token);

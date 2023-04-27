@@ -11,6 +11,10 @@ export function Product({ setadddata, adddata }) {
   const [searchquery, setsearchquery] = useState("");
   const [datafrmapi, setdata] = useState([]);
 
+  const [Ssearch, setSsearch] = useState(true);
+
+  const [cata, setcata] = useState([]);
+
   const getdata = async () => {
     await fetch(`${API}/products/categories/${select_pro}`)
       .then((data) => data.json())
@@ -18,23 +22,31 @@ export function Product({ setadddata, adddata }) {
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    getdata();
-  }, []);
-
-  const categories = [
-    "all",
-    "fruit",
-    "vegetables",
-    "milk",
-    "oil",
-    "soap&detergent",
-  ];
-  const handleSelectChange = (event) => {
-    select_pro = event.target.value;
-    getdata();
+  const getdatacatagories = async () => {
+    await fetch(`${API}/products/categories/name`)
+      .then((data) => data.json())
+      .then((data) => setcata(data))
+      .catch((err) => console.log(err));
   };
 
+  useEffect(() => {
+    getdata();
+    getdatacatagories();
+  }, []);
+
+  // const categories = [
+  //   "all",
+  //   "fruit",
+  //   "vegetables",
+  //   "milk",
+  //   "oil",
+  //   "soap&detergent",
+  // ];
+  const handleSelectChange = (event) => {
+    setsearchquery(event.target.value);
+    setSsearch(false);
+  };
+  console.log(datafrmapi);
   return (
     <section>
       <main>
@@ -47,15 +59,15 @@ export function Product({ setadddata, adddata }) {
             <div className="col-8 col-lg-4 col-md-5 ">
               <select
                 onChange={handleSelectChange}
-                defaultValue="all"
+                defaultValue=""
                 className="form-select form-select-lg mb-3"
                 aria-label=".form-select-lg example"
               >
-                <option>Open this select menu</option>
-                {categories?.map((val, index) => {
+                <option value=""> Open this select menu</option>
+                {cata?.map((val, index) => {
                   return (
-                    <option key={index} value={val}>
-                      {val}
+                    <option key={index} value={val.catagories}>
+                      {val.catagories}
                     </option>
                   );
                 })}
@@ -69,7 +81,11 @@ export function Product({ setadddata, adddata }) {
                     Search
                   </span>
                   <input
-                    onChange={(e) => setsearchquery(e.target.value)}
+                    onChange={(e) => {
+                      setSsearch(true);
+                      setsearchquery(e.target.value);
+                      console.log(searchquery, "ssearch");
+                    }}
                     type="text"
                     className="form-control"
                     placeholder="Search"
@@ -82,64 +98,123 @@ export function Product({ setadddata, adddata }) {
           </div>
 
           <div className="row d-flex justify-content-center">
-            {datafrmapi
-              .filter((item) => {
-                return searchquery.toLowerCase() === ""
-                  ? item
-                  : item.name.toLowerCase().includes(searchquery);
-              })
-              .map((ele) => {
-                return (
-                  <div
-                    key={ele._id}
-                    className="col-md-6 mb-3 col-lg-4 col-xl-3 col-7"
-                  >
-                    <div className="card">
-                      <img
-                        src={ele.img_pro}
-                        alt="content-img"
-                        className="card-img-pro"
-                      />
-                      <div className="card-body">
-                        <div className="text-center h3 card-title">
-                          {ele.name}
-                        </div>
-                        <div className="text-center mb-2 h5 text-muted">
-                          Amount : {ele.price} ₹{" "}
-                          <span className="me-2">{ele.quantity}</span>/{" "}
-                          <span className="me-2">{ele.q_type}</span>
-                        </div>
+            {Ssearch === true
+              ? datafrmapi
+                  .filter((item) => {
+                    return searchquery.toLowerCase() === ""
+                      ? item
+                      : item.name.toLowerCase().includes(searchquery);
+                  })
+                  .map((ele) => {
+                    return (
+                      <div
+                        key={ele._id}
+                        className="col-md-6 mb-3 col-lg-4 col-xl-3 col-7"
+                      >
+                        <div className="card">
+                          <img
+                            src={ele.img_pro}
+                            alt="content-img"
+                            className="card-img-pro"
+                          />
+                          <div className="card-body">
+                            <div className="text-center h3 card-title">
+                              {ele.name}
+                            </div>
+                            <div className="text-center mb-2 h5 text-muted">
+                              Amount : {ele.price} ₹{" "}
+                              <span className="me-2">{ele.quantity}</span>/{" "}
+                              <span className="me-2">{ele.q_type}</span>
+                            </div>
 
-                        <div className="text-center">
-                          <h5>
-                            {ele.stock}{" "}
-                            <span className="text-muted">
-                              Stock is available
-                            </span>{" "}
-                          </h5>
-                        </div>
+                            <div className="text-center">
+                              <h5>
+                                {ele.stock}{" "}
+                                <span className="text-muted">
+                                  Stock is available
+                                </span>{" "}
+                              </h5>
+                            </div>
 
-                        <div className="button text-center mt-3 d-flex justify-content-center gap-2 text-center">
-                          <button
-                            onClick={() => navigate(`/products/${ele._id}`)}
-                            className="btn btn-secondary"
-                          >
-                            Buy Now
-                          </button>
-                          <button
-                            onClick={() => {
-                              setadddata([...adddata, ele]);
-                            }}
-                            className="btn btn-secondary"
-                          >
-                            Add Cart
-                          </button>
+                            <div className="button text-center mt-3 d-flex justify-content-center gap-2 text-center">
+                              <button
+                                onClick={() => navigate(`/products/${ele._id}`)}
+                                className="btn btn-secondary"
+                              >
+                                Buy Now
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setadddata([...adddata, ele]);
+                                }}
+                                className="btn btn-secondary"
+                              >
+                                Add Cart
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })
+              : datafrmapi
+                  .filter((item) => {
+                    return searchquery.toLowerCase() === ""
+                      ? item
+                      : item.catagories.toLowerCase().includes(searchquery);
+                  })
+                  .map((ele) => {
+                    return (
+                      <div
+                        key={ele._id}
+                        className="col-md-6 mb-3 col-lg-4 col-xl-3 col-7"
+                      >
+                        <div className="card">
+                          <img
+                            src={ele.img_pro}
+                            alt="content-img"
+                            className="card-img-pro"
+                          />
+                          <div className="card-body">
+                            <div className="text-center h3 card-title">
+                              {ele.name}
+                            </div>
+                            <div className="text-center mb-2 h5 text-muted">
+                              Amount : {ele.price} ₹{" "}
+                              <span className="me-2">{ele.quantity}</span>/{" "}
+                              <span className="me-2">{ele.q_type}</span>
+                            </div>
+
+                            <div className="text-center">
+                              <h5>
+                                {ele.stock}{" "}
+                                <span className="text-muted">
+                                  Stock is available
+                                </span>{" "}
+                              </h5>
+                            </div>
+
+                            <div className="button text-center mt-3 d-flex justify-content-center gap-2 text-center">
+                              <button
+                                onClick={() => navigate(`/products/${ele._id}`)}
+                                className="btn btn-secondary"
+                              >
+                                Buy Now
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setadddata([...adddata, ele]);
+                                }}
+                                className="btn btn-secondary"
+                              >
+                                Add Cart
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
           </div>
 
           {/* <div className="row-con">

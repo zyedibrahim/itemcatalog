@@ -61,16 +61,6 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
 
   const [user, setuser] = useState("false");
 
-  // const loginc = () => {
-  //   if (localStorage.getItem("token")) {
-  //     navigate("/home");
-  //   }
-  // };
-  // const loginc2 = () => {
-  //   localStorage.clear();
-  //   window.location.href = "/login";
-  // };
-
   const filterdel = (data) => {
     const dataddd = products?.filter((ele) => ele._id !== data);
     const dataad = adddata?.filter((ele) => ele._id !== data);
@@ -90,28 +80,94 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
 
           <div className="collapse  navbar-collapse" id="navbarNavDropdown">
             <ul className="ms-5 navbar-nav gap-2">
-              <li className="nav-item ">
-                <Link
-                  className="nav-link clr-org active text-white "
-                  aria-current="page"
-                  to="/home"
-                >
-                  <i className="me-2 fa-solid fa-house-user"></i>
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item ">
-                <Link className="nav-link text-white" to="/product">
-                  <i className="me-2 fa-solid fa-bars"></i>
-                  Products
-                </Link>
-              </li>
+              {localStorage.getItem("token") ? (
+                <li className="nav-item ">
+                  <Link
+                    className="nav-link clr-org active text-white "
+                    aria-current="page"
+                    to="/home"
+                  >
+                    <i className="me-2 fa-solid fa-house-user"></i>
+                    Home
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
+
+              {localStorage.getItem("token") ? (
+                <li className="nav-item ">
+                  <Link className="nav-link text-white" to="/product">
+                    <i className="me-2 fa-solid fa-bars"></i>
+                    Products
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
 
               {localStorage.getItem("token") ? (
                 <li className="nav-item">
                   <Link className="nav-link text-white" to="/myorders">
                     <i className="me-2 fa-solid fa-bag-shopping"></i>
                     MYOrder
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
+
+              {localStorage.getItem("adtoken") ? (
+                <li className="nav-item ">
+                  <Link
+                    className="nav-link clr-org active text-white "
+                    aria-current="page"
+                    to="/dashboard"
+                  >
+                    <i className="me-2 fa-solid fa-house-user"></i>
+                    Dashboard
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
+              {localStorage.getItem("adtoken") ? (
+                <li className="nav-item ">
+                  <Link
+                    className="nav-link clr-org active text-white "
+                    aria-current="page"
+                    to="/adminproduct"
+                  >
+                    <i className="me-2 fa-solid fa-house-user"></i>
+                    Product
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
+              {localStorage.getItem("adtoken") ? (
+                <li className="nav-item ">
+                  <Link
+                    className="nav-link clr-org active text-white "
+                    aria-current="page"
+                    to="/admincatagories"
+                  >
+                    <i className="me-2 fa-solid fa-house-user"></i>
+                    Catagories
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
+              {localStorage.getItem("adtoken") ? (
+                <li className="nav-item ">
+                  <Link
+                    className="nav-link clr-org active text-white "
+                    aria-current="page"
+                    to="/adminuser"
+                  >
+                    <i className="me-2 fa-solid fa-house-user"></i>
+                    Users
                   </Link>
                 </li>
               ) : (
@@ -133,7 +189,8 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 {products.length === 0 ? "" : adddata.length}
               </button>
             </li>
-            {localStorage.getItem("token") ? (
+            {localStorage.getItem("token") ||
+            localStorage.getItem("adtoken") ? (
               <li className="nav-item">
                 <button
                   onClick={() => {
