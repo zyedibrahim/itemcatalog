@@ -211,7 +211,8 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 </button>
               </li>
             )}
-            {localStorage.getItem("token") ? (
+            {localStorage.getItem("token") ||
+            localStorage.getItem("adtoken") ? (
               <li className="nav-item">
                 <button className="btn btn-nav cart">
                   <Link className="nav-link text-white" to="/myprofile">

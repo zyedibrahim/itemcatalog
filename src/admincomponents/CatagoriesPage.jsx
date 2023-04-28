@@ -11,6 +11,14 @@ export function CatagoriesPage() {
   const [apidata, setapidaata] = useState([]);
   const [editdata, seteditdata] = useState([]);
 
+  const [iddata, setiddata] = useState();
+
+  function sendata(data) {
+    // setiddata(data);
+    localStorage.setItem("tempid", data._id);
+    console.log(iddata, "iddatainside");
+  }
+
   const getdatacatagories = async () => {
     await fetch(`${API}/products/categories/name`, {
       method: "GET",
@@ -19,25 +27,11 @@ export function CatagoriesPage() {
       },
     })
       .then((data) => data.json())
-      .then((data) => setapidaata(data))
+      .then((data) => {
+        setapidaata(data);
+      })
       .catch((err) => console.log(err));
   };
-
-  const editcome = async (dataid) => {
-    await fetch(`${API}/products/categories/name/${dataid}`, {
-      method: "GET",
-      headers: {
-        "x-auth-token": localStorage.getItem("adtoken"),
-      },
-    })
-      .then((data) => data.json())
-      .then((data) => seteditdata(data))
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-    getdatacatagories();
-  }, []);
 
   const {
     values,
@@ -78,14 +72,25 @@ export function CatagoriesPage() {
   };
 
   useEffect(() => {
-    if (showButton) {
+    getdatacatagories();
+  }, []);
+
+  useEffect(() => {
+    if (showButton === true) {
       buttonRef.current.click();
+      setShowButton(false);
     }
   }, [showButton]);
 
-  // useEffect(() => {
-  //   editcome();
-  // }, []);
+  const deletefun = (dataid) => {
+    fetch(`${API}/products/categories/name/${dataid}`, {
+      method: "DELETE",
+      headers: {
+        "x-auth-token": localStorage.getItem("adtoken"),
+      },
+    });
+    getdatacatagories();
+  };
 
   return (
     <div className="container">
@@ -137,14 +142,19 @@ export function CatagoriesPage() {
                         <td>
                           <div className="btn-con d-flex justify-content-center gap-3">
                             <button
-                              onClick={() => editcome(ele._id)}
+                              onClick={() => sendata(ele)}
                               data-bs-toggle="modal"
                               data-bs-target="#staticBackdropedit"
                               className="btn btn-warning"
                             >
                               Edit
                             </button>
-                            <button className="btn btn-danger">Delete</button>
+                            <button
+                              onClick={() => deletefun(ele._id)}
+                              className="btn btn-danger"
+                            >
+                              Delete
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -228,52 +238,90 @@ export function CatagoriesPage() {
 
       {/* add modal */}
 
-      {editdata.catagories ? (
-        <EditCatagories editdata={editdata.catagories} />
-      ) : (
-        <h1>Loading...</h1>
-      )}
+      <div>
+        <EditCatagories getdatacatagories={getdatacatagories} />
+      </div>
     </div>
   );
 }
 
-function EditCatagories({ editdata }) {
+function EditCatagories({ getdatacatagories }) {
+  // console.log(iddata, "iddata");
+
+  const [eachdata, seteachdata] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("tempid")) {
+      fetch(
+        `${API}/products/categories/name/${localStorage.getItem("tempid")}`,
+        {
+          method: "GET",
+          headers: {
+            "x-auth-token": localStorage.getItem("adtoken"),
+          },
+        }
+      )
+        .then((data) => data.json())
+        .then((data) => seteachdata(data))
+        .catch((err) => console.log(err));
+      console.log("right happen");
+    } else {
+      console.log("happen");
+    }
+  }, []);
+
+  return eachdata ? (
+    <div>
+      <UpdateCatagories
+        eachdata={eachdata}
+        getdatacatagories={getdatacatagories}
+      />
+    </div>
+  ) : (
+    <h1>Loading..</h1>
+  );
+}
+
+function UpdateCatagories({ eachdata, getdatacatagories }) {
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
-        catagories: editdata,
+        catagories: eachdata.catagories,
       },
       validationSchema: formvalidationschema,
       onSubmit: (data) => {
-        setShowButton(true);
-        console.log(data);
+        putcatagorie(data);
       },
     });
 
-  console.log(editdata, "from editdata");
   const [showButton, setShowButton] = useState(false);
   const buttonRef = useRef(null);
 
-  // const postcatagorie = async (data) => {
-  //   const fetchapi = await fetch(`${API}/products/categories/name`, {
-  //     method: "POST",
-  //     body: JSON.stringify(data),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-  //   const jsondata = await fetchapi.json();
-
-  //   if (jsondata.status === "200 ok") {
-  //     setShowButton(true);
-  //     getdatacatagories();
-  //     resetForm();
-  //   }
-  // };
+  const putcatagorie = async (data) => {
+    console.log(data, "putcatagorie");
+    setShowButton(true);
+    const fetchapi = await fetch(
+      `${API}/products/categories/name/${iddata._id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("adtoken"),
+        },
+      }
+    );
+    const jsondata = await fetchapi.json();
+    if (jsondata.status === "200 ok") {
+      setShowButton(true);
+    }
+    getdatacatagories();
+  };
 
   useEffect(() => {
-    if (showButton) {
+    if (showButton === true) {
       buttonRef.current.click();
+      setShowButton(false);
     }
   }, [showButton]);
 
@@ -324,12 +372,8 @@ function EditCatagories({ editdata }) {
                 </div>
 
                 <div className="modal-footer">
-                  <button
-                    type="submit"
-                    className="btn btn-success"
-                    data-bs-dismiss="update"
-                  >
-                    Add
+                  <button type="submit" className="btn btn-success">
+                    Update
                   </button>
                   <button
                     type="button"

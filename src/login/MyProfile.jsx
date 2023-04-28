@@ -32,6 +32,8 @@ export function MyProfile() {
       .then((data) => setgetdata(data));
   }, []);
 
+  console.log(getdata, "outside");
+
   return getdata ? (
     <div>
       <Updateprofile getdata={getdata} />

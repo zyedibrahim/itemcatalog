@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export function Product({ setadddata, adddata }) {
   // const [select_pro, setselect] = useState("all");
-  let select_pro = "all";
+  // let select_pro = "all";
 
   const navigate = useNavigate();
   const [searchquery, setsearchquery] = useState("");
@@ -16,14 +16,18 @@ export function Product({ setadddata, adddata }) {
   const [cata, setcata] = useState([]);
 
   const getdata = async () => {
-    await fetch(`${API}/products/categories/${select_pro}`)
+    await fetch(`${API}/products/categories/name/all`)
       .then((data) => data.json())
       .then((data) => setdata(data))
       .catch((err) => console.log(err));
   };
 
   const getdatacatagories = async () => {
-    await fetch(`${API}/products/categories/name`)
+    await fetch(`${API}/products/categories/name`, {
+      headers: {
+        "x-auth-token": localStorage.getItem("token"),
+      },
+    })
       .then((data) => data.json())
       .then((data) => setcata(data))
       .catch((err) => console.log(err));

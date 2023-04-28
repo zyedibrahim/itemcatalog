@@ -5,7 +5,7 @@ export function Dashboard() {
   const [apidata, setapidaata] = useState();
 
   const getdata = async () => {
-    await fetch(`${API}/products/categories/all`)
+    await fetch(`${API}/products/categories/name/all`)
       .then((data) => data.json())
       .then((data) => setapidaata(data))
       .catch((err) => console.log(err));
