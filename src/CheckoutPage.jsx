@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 // import dataaddress from "./dataAddress";
 import { API } from "./data";
+import { useNavigate } from "react-router-dom";
 
 const formvalidationschemaaddress = yup.object({
   country: yup.string().required("This is fiels is required"),
@@ -311,6 +312,8 @@ function Addadressfun({ cprouduct, quantity, address }) {
     0
   );
 
+  const navigate = useNavigate();
+
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
@@ -319,9 +322,36 @@ function Addadressfun({ cprouduct, quantity, address }) {
       },
       validationSchema: formvalidationschemapay,
       onSubmit: (data) => {
-        console.log(data, cprouduct, "products");
+        const orderdata = {
+          address: address[data.checkadd],
+          payment: data.payment,
+          product: cprouduct,
+        };
+
+        putorderdata(orderdata);
       },
     });
+
+  const putorderdata = async (data) => {
+    console.log(data.product[0]._id);
+    const fetchapi = await fetch(
+      `${API}/alluser/accounts/${data.product[0]._id} `,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("adtoken"),
+        },
+      }
+    );
+    const jsondata = await fetchapi.json();
+    const temp = await jsondata.status;
+
+    if (temp === "200 ok") {
+      window.location.href = "/product";
+    }
+  };
 
   const [editdatafr, seteditdatafr] = useState([]);
 
@@ -349,7 +379,7 @@ function Addadressfun({ cprouduct, quantity, address }) {
                     onChange={handleChange}
                     className="form-check-input"
                     type="radio"
-                    value={ele}
+                    value={index}
                     id={`flexRadioDefault${index}`}
                   />
                   <label

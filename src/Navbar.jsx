@@ -53,7 +53,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
 
       setTimeout(() => {
         navigate("/checkoutpage");
-      }, 1000);
+      }, 2000);
     } else {
       window.location.href = "/login";
     }

@@ -7,9 +7,9 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
   const [eachdata, seteachdata] = useState([]);
 
   const getdata = async () => {
-    await fetch(`${API}/products/${id}`)
+    await fetch(`${API}/products/all/${id}`)
       .then((data) => data.json())
-      .then((data) => seteachdata([data.datas]))
+      .then((data) => seteachdata([data]))
       .catch((err) => {
         console.log(err);
       });
@@ -61,7 +61,7 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
                     <div className="col-md-4">
                       <img
                         className="img-fluid rounded-start"
-                        src={ele.img_pro}
+                        src={ele?.img_pro}
                         alt="img-product"
                       />
                     </div>
