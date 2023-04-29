@@ -16,14 +16,14 @@ export function Product({ setadddata, adddata }) {
   const [cata, setcata] = useState([]);
 
   const getdata = async () => {
-    await fetch(`${API}/products/categories/name/all`)
+    await fetch(`${API}/products/all`)
       .then((data) => data.json())
       .then((data) => setdata(data))
       .catch((err) => console.log(err));
   };
 
   const getdatacatagories = async () => {
-    await fetch(`${API}/products/categories/name`, {
+    await fetch(`${API}/products/categories/name/all`, {
       headers: {
         "x-auth-token": localStorage.getItem("token"),
       },

@@ -10,13 +10,15 @@ import { Createuser } from "./createuser/Createuser";
 import { EachProduct } from "./EachProduct";
 import { CheckoutPage } from "./CheckoutPage";
 import { MySelect } from "./MySelect";
-import { AdminuserPage } from "./admincomponents/AdminuserPage";
 import { MyProfile } from "./login/MyProfile";
 import { OtpVerify } from "./createuser/OtpVerify.jsx";
 import { Dashboard } from "./admincomponents/Dashboard.jsx";
 import { CatagoriesPage } from "./admincomponents/CatagoriesPage";
 import { AdminuserProduct } from "./admincomponents/AdminuserProduct";
 import { AdminuserPageUsers } from "./admincomponents/AdminuserPageUsers";
+import { EditCatagories } from "./admincomponents/EditCatagories";
+import { EditProduct } from "./admincomponents/EditProduct";
+import { OrderAndContactDetails } from "./admincomponents/OrderAndContactDetails";
 
 function App() {
   const [adddata, setadddata] = useState([]);
@@ -66,14 +68,7 @@ function App() {
           }
         />
         <Route path="/none" element={<MySelect />} />
-        <Route
-          path="/adminPage"
-          element={
-            <ProtectedRoutAdminPage>
-              <AdminuserPage />
-            </ProtectedRoutAdminPage>
-          }
-        />
+
         <Route
           path="/myprofile"
           element={
@@ -122,6 +117,30 @@ function App() {
             </ProtectedRoutAdminPageUsers>
           }
         />
+        <Route
+          path="/edit/catagories/:id"
+          element={
+            <ProtectedRoutEditCatagoriesPage>
+              <EditCatagories />
+            </ProtectedRoutEditCatagoriesPage>
+          }
+        />
+        <Route
+          path="/edit/product/:id"
+          element={
+            <ProtectedRoutEditProductPage>
+              <EditProduct />
+            </ProtectedRoutEditProductPage>
+          }
+        />
+        <Route
+          path="/order/contact/:id"
+          element={
+            <ProtectedRoutAdminOrdersPage>
+              <OrderAndContactDetails />
+            </ProtectedRoutAdminOrdersPage>
+          }
+        />
 
         <Route path="/otpverify" element={<OtpVerify />} />
       </Routes>
@@ -156,6 +175,24 @@ function ProtectedRoutAdminCatagoriesPage({ children }) {
     <Navigate replace to="/" />
   );
 }
+function ProtectedRoutEditCatagoriesPage({ children }) {
+  return localStorage.getItem("adtoken") ? (
+    <section className="text-white">
+      <div>{children}</div>
+    </section>
+  ) : (
+    <Navigate replace to="/" />
+  );
+}
+function ProtectedRoutEditProductPage({ children }) {
+  return localStorage.getItem("adtoken") ? (
+    <section className="text-white">
+      <div>{children}</div>
+    </section>
+  ) : (
+    <Navigate replace to="/" />
+  );
+}
 function ProtectedRoutAdminProductPage({ children }) {
   return localStorage.getItem("adtoken") ? (
     <section className="text-white">
@@ -165,11 +202,9 @@ function ProtectedRoutAdminProductPage({ children }) {
     <Navigate replace to="/" />
   );
 }
-
-function ProtectedRoutAdminPage({ children }) {
+function ProtectedRoutAdminOrdersPage({ children }) {
   return localStorage.getItem("adtoken") ? (
-    <section>
-      <h1>this route is protected</h1>
+    <section className="text-white">
       <div>{children}</div>
     </section>
   ) : (

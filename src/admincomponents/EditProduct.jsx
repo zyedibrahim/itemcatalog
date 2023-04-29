@@ -1,50 +1,56 @@
 import { useEffect, useState } from "react";
 import { API } from "../data";
-
-import * as yup from "yup";
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { formvalidationschema } from "./AdminuserProduct";
 
-export const formvalidationschema = yup.object({
-  catagories: yup.string().required("This is fiels is required"),
-  name: yup.string().required("This is fiels is required"),
-  price: yup.number().required("This field is required"),
-  stock: yup.number().required("This field is required"),
-  q_type: yup.string().required("This field is required"),
-  img_pro: yup.string().required("This field is required"),
-});
+export function EditProduct() {
+  // console.log(iddata, "iddata");
+  const { id } = useParams();
 
-export function AdminuserProduct() {
+  const [eachdata, seteachdata] = useState();
+
+  useEffect(() => {
+    fetch(`${API}/products/all/${id}`, {
+      method: "GET",
+      headers: {
+        "x-auth-token": localStorage.getItem("adtoken"),
+      },
+    })
+      .then((data) => data.json())
+      .then((data) => seteachdata(data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  return eachdata ? (
+    <div>
+      <UpdateProduct eachdata={eachdata} />
+    </div>
+  ) : (
+    <h1>Loading..</h1>
+  );
+}
+function UpdateProduct({ eachdata }) {
+  console.log(eachdata.catagories, "update data");
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
-        catagories: "",
-        name: "",
-        price: "",
-        quantity: 1,
-        stock: "",
-        q_type: "",
-        img_pro: "",
+        catagories: eachdata.catagories,
+        name: eachdata.name,
+        price: eachdata.price,
+        quantity: eachdata.quantity,
+        stock: eachdata.stock,
+        q_type: eachdata.q_type,
+        img_pro: eachdata.img_pro,
       },
       validationSchema: formvalidationschema,
       onSubmit: (data) => {
         console.log(data);
-        addproduct(data);
+        putProduct(data);
       },
     });
 
-  const [alldata, setalldata] = useState([]);
-
-  const getdata = async () => {
-    await fetch(`${API}/products/all`)
-      .then((data) => data.json())
-      .then((data) => setalldata(data))
-      .catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    getdata();
-  }, []);
-
+  const navigate = useNavigate();
   const [cata, setcata] = useState([]);
 
   const getdatacatagories = async () => {
@@ -62,154 +68,32 @@ export function AdminuserProduct() {
     getdatacatagories();
   }, []);
 
-  const addproduct = async (data) => {
-    const dataf = await fetch(`${API}/products/all`, {
-      method: "POST",
+  const putProduct = async (data) => {
+    const fetchapi = await fetch(`${API}/products/all/${eachdata._id}`, {
+      method: "PUT",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
-      },
-    });
-    const jsondata = await dataf.json();
-    console.log(jsondata);
-    if (jsondata.status === "200 ok") {
-      getdata();
-    } else {
-      console.log("something went wrong");
-    }
-  };
-
-  const deletefunc = (data) => {
-    fetch(`${API}/products/categories/all/${data}`, {
-      method: "DELETE",
-      headers: {
         "x-auth-token": localStorage.getItem("adtoken"),
       },
     });
-    getdata();
-  };
+    const jsondata = await fetchapi.json();
+    const temp = await jsondata.status;
 
-  const navigate = useNavigate();
+    if (temp === "200 ok") {
+      navigate("/adminproducts");
+    }
+  };
 
   return (
     <div className="container">
-      <div className="row mb-4 mt-5 d-flex justify-content-center ">
-        <div className="col-10 col-lg-4 col-md-5 ">
-          <div>
-            <div className="input-group input-group-lg mb-3">
-              <span className="input-group-text" id="basic-addon1">
-                Search
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search"
-                aria-label="search"
-                aria-describedby="basic-addon1"
-              />
+      <div className="row mt-5 d-flex justify-content-center">
+        <div className="col-12 col-md- col-lg-5 col-xl-5">
+          <div className="card">
+            <div className="card-header">
+              <div className="card-text text-center">Edit Product</div>
             </div>
-          </div>
-        </div>
-        <div className="col-8 col-lg-4 col-md-5 ">
-          <button
-            data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
-            className="btn w-100 btn-success"
-          >
-            Add Product
-          </button>
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12">
-          <div className="table-responsive">
-            <table className="table  text-light">
-              <thead>
-                <tr className="text-center">
-                  <th scope="col">#</th>
-                  <th scope="col">Catagories</th>
-                  <th scope="col">Product</th>
-                  <th scope="col">unit</th>
-                  <th scope="col">Amount</th>
-                  <th scope="col">Quantity</th>
-                  <th scope="col">Picture</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {alldata
-                  ? alldata.map((ele, index) => {
-                      return (
-                        <tr key={ele._id} className="text-center">
-                          <th scope="row">{index + 1}</th>
-                          <td>{ele.catagories}</td>
-                          <td>{ele.name}</td>
-                          <td>{ele.q_type}</td>
-                          <td>{ele.price}</td>
-                          <td>{ele.stock}</td>
-                          <td>
-                            <div className=" img-con-ad">
-                              <img
-                                src={ele.img_pro}
-                                alt={ele.catagories}
-                                className="img-ad"
-                              />
-                            </div>
-                          </td>
-                          <td>
-                            <div className="btn-con d-flex justify-content-center gap-3">
-                              <button
-                                onClick={() =>
-                                  navigate(`/edit/product/${ele._id}`)
-                                }
-                                className="btn btn-warning"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => deletefunc(ele._id)}
-                                type="button"
-                                className="btn btn-danger"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : ""}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog text-dark mt-d">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                Add Product
-              </h1>
-              <button
-                // ref={buttonRef}
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
+            <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-12 col-md-6">
@@ -348,17 +232,13 @@ export function AdminuserProduct() {
                 </div>
 
                 <div className="modal-footer">
-                  <button
-                    type="submit"
-                    className="btn btn-success"
-                    data-bs-dismiss="modal"
-                  >
+                  <button type="submit" className="btn btn-success">
                     Add
                   </button>
                   <button
                     type="button"
                     className="btn btn-danger"
-                    data-bs-dismiss="modal"
+                    onClick={() => navigate(-1)}
                   >
                     Close
                   </button>
