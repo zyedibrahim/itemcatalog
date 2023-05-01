@@ -25,6 +25,7 @@ export function AdminuserProduct() {
         stock: "",
         q_type: "",
         img_pro: "",
+        sold: 0,
       },
       validationSchema: formvalidationschema,
       onSubmit: (data) => {

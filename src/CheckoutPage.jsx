@@ -326,6 +326,7 @@ function Addadressfun({ cprouduct, quantity, address }) {
           address: address[data.checkadd],
           payment: data.payment,
           product: cprouduct,
+          _id: localStorage.getItem("_id"),
         };
 
         putorderdata(orderdata);
