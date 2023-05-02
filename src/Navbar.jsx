@@ -61,10 +61,16 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
 
   const [user, setuser] = useState("false");
 
-  const filterdel = (data) => {
-    const dataddd = products?.filter((ele) => ele._id !== data);
-    const dataad = adddata?.filter((ele) => ele._id !== data);
+  const filterdel = (data, index) => {
+    const dataddd = products?.filter((ele) => ele._id !== data._id);
+    // cartdata
+    const dataad = adddata?.filter(
+      (ele) => ele._id !== data._id,
+      (data.price = 0)
+    );
 
+    console.log(data.price, "price");
+    y;
     setProducts(dataddd);
     setadddata(dataad);
   };
@@ -269,7 +275,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                           <img
                             src={ele.img_pro}
                             className="img-fluid"
-                            alt="..."
+                            alt={ele.name}
                           />
                         </div>
                         <div className="col-8">
@@ -293,7 +299,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                                 </div>
                                 <div className="btn-con d-flex justify-content-end">
                                   <button
-                                    onClick={() => filterdel(ele._id)}
+                                    onClick={() => filterdel(ele, index)}
                                     className="btn btn-danger"
                                   >
                                     Delete
@@ -323,15 +329,13 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
               <h1 className="text-muted"> Cart is Empty </h1>
             )}
           </div>
-          <div className="d-flex justify-content-end">
-            <div> Total Rs:- {totalPri}</div>
-          </div>
-
-          {/* <div className="mb-3">
-            {amount?.map((ele) => {
-              return <div>{ele.price}</div>;
-            })}
-          </div> */}
+          {products?.length ? (
+            <div className="d-flex justify-content-end">
+              <div> Total Rs:- {totalPri}</div>
+            </div>
+          ) : (
+            ""
+          )}
 
           <div className="mb-3">
             {products?.length > 0 ? (
