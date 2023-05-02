@@ -39,7 +39,7 @@ export function MyProfile() {
       <Updateprofile getdata={getdata} />
     </div>
   ) : (
-    <h1>loading...</h1>
+    <h1 className="text-center text-white">loading...</h1>
   );
 }
 
@@ -210,7 +210,7 @@ function UpdatePassword() {
 
           <div className="mb-2">
             <div className="d-grid">
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="mb-2 btn btn-primary">
                 Change Password
               </button>
               <button onClick={() => navigate(-1)} className="btn btn-primary">
