@@ -158,7 +158,7 @@ export function CheckoutPage({ cartitem, quantity }) {
                         className="form-control mb-3"
                         aria-label="form-select-lg example"
                       />
-                      {/* up dd*/}
+                      {/*  */}
                       {touched.country && errors.country ? errors.country : ""}
                     </div>
                   </div>
