@@ -197,7 +197,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
           <div className="d-flex justify-content-center gap-2">
             <li className="nav-item">
               <button
-                className="btn btn-nav  cart "
+                className="btn  btn-nav  cart "
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasRight"

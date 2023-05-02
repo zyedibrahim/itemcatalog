@@ -92,6 +92,13 @@ export function AdminuserProduct() {
 
   const navigate = useNavigate();
 
+  const [searchquery, setsearchquery] = useState("");
+
+  const handlechangeserach = (e) => {
+    console.log(alldata);
+    setsearchquery(e.target.value);
+  };
+
   return (
     <div className="container">
       <div className="row mb-4 mt-5 d-flex justify-content-center ">
@@ -103,6 +110,7 @@ export function AdminuserProduct() {
               </span>
               <input
                 type="text"
+                onChange={handlechangeserach}
                 className="form-control"
                 placeholder="Search"
                 aria-label="search"
@@ -139,7 +147,58 @@ export function AdminuserProduct() {
                 </tr>
               </thead>
               <tbody>
-                {alldata
+                {alldata ? (
+                  alldata
+                    .filter((item) => {
+                      return searchquery.toLowerCase() === ""
+                        ? item
+                        : item.name.toLowerCase().includes(searchquery);
+                    })
+                    .map((ele, index) => {
+                      return (
+                        <tr key={ele._id} className="text-center">
+                          <th scope="row">{index + 1}</th>
+                          <td>{ele.catagories}</td>
+                          <td>{ele.name}</td>
+                          <td>{ele.q_type}</td>
+                          <td>{ele.price}</td>
+                          <td>{ele.stock}</td>
+                          <td>
+                            <div className=" img-con-ad">
+                              <img
+                                src={ele.img_pro}
+                                alt={ele.catagories}
+                                className="img-ad"
+                              />
+                            </div>
+                          </td>
+                          <td>
+                            <div className="btn-con d-flex justify-content-center gap-3">
+                              <button
+                                onClick={() =>
+                                  navigate(`/edit/product/${ele._id}`)
+                                }
+                                className="btn btn-warning"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => deletefunc(ele._id)}
+                                type="button"
+                                className="btn btn-danger"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                ) : (
+                  <h1>NO data found </h1>
+                )}
+
+                {/* {alldata
                   ? alldata.map((ele, index) => {
                       return (
                         <tr key={ele._id} className="text-center">
@@ -180,7 +239,7 @@ export function AdminuserProduct() {
                         </tr>
                       );
                     })
-                  : ""}
+                  : ""} */}
               </tbody>
             </table>
           </div>

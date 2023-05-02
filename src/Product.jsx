@@ -37,15 +37,6 @@ export function Product({ setadddata, adddata }) {
     getdata();
     getdatacatagories();
   }, []);
-
-  // const categories = [
-  //   "all",
-  //   "fruit",
-  //   "vegetables",
-  //   "milk",
-  //   "oil",
-  //   "soap&detergent",
-  // ];
   const handleSelectChange = (event) => {
     setsearchquery(event.target.value);
     setSsearch(false);
@@ -133,9 +124,16 @@ export function Product({ setadddata, adddata }) {
 
                             <div className="text-center">
                               <h5>
-                                {ele.stock}{" "}
-                                <span className="text-muted">
-                                  Stock is available
+                                {ele.stock > 0 ? ele.stock : ""}{" "}
+                                <span
+                                  className={` ${
+                                    ele.stock > 0 ? "text-muted" : ""
+                                  } `}
+                                  style={{ color: "red" }}
+                                >
+                                  {ele.stock > 0
+                                    ? "Availbale Stock"
+                                    : "Out Of Stock"}
                                 </span>{" "}
                               </h5>
                             </div>
@@ -143,7 +141,9 @@ export function Product({ setadddata, adddata }) {
                             <div className="button text-center mt-3 d-flex justify-content-center gap-2 text-center">
                               <button
                                 onClick={() => navigate(`/products/${ele._id}`)}
-                                className="btn btn-secondary"
+                                className={`btn btn-secondary ${
+                                  ele.stock > 0 ? "" : "disabled"
+                                } `}
                               >
                                 Buy Now
                               </button>
@@ -151,7 +151,9 @@ export function Product({ setadddata, adddata }) {
                                 onClick={() => {
                                   setadddata([...adddata, ele]);
                                 }}
-                                className="btn btn-secondary"
+                                className={`btn btn-secondary ${
+                                  ele.stock > 0 ? "" : "disabled"
+                                } `}
                               >
                                 Add Cart
                               </button>

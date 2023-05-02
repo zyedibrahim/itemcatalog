@@ -24,6 +24,18 @@ export function Dashboard() {
     (total, product) => total + product.sold,
     0
   );
+  const outofstock = apidata?.reduce((total, product) => {
+    if (product.stock === 0) {
+      return total + product.stock;
+    }
+  }, 0);
+
+  const [searchquery, setsearchquery] = useState("");
+  const handlechangeserach = (e) => {
+    console.log(e.target.value);
+
+    setsearchquery(e.target.value);
+  };
 
   // console.log(totalstock);
   return (
@@ -54,7 +66,7 @@ export function Dashboard() {
             <div className="card-body">
               <div className="card-title">
                 <h4 className="text-center card-text">Sold</h4>
-                <h4 className="text-center card-text">{totalstock}</h4>
+                <h4 className="text-center card-text">{totalsold}</h4>
               </div>
             </div>
           </div>
@@ -64,6 +76,7 @@ export function Dashboard() {
             <div className="card-body">
               <div className="card-title">
                 <h4 className="text-center card-text">Out of Stock</h4>
+                <h4 className="text-center card-text"></h4>
               </div>
             </div>
           </div>
@@ -80,6 +93,22 @@ export function Dashboard() {
         </div>
       </div>
 
+      <div className="mt-3 mb-3">
+        <div className="input-group w-50 input-group-lg mb-3">
+          <span className="input-group-text" id="basic-addon1">
+            Search
+          </span>
+          <input
+            type="text"
+            onChange={handlechangeserach}
+            className="form-control"
+            placeholder="Search"
+            aria-label="search"
+            aria-describedby="basic-addon1"
+          />
+        </div>
+      </div>
+
       <div className="table-responsive">
         <table className="table  text-light">
           <thead>
@@ -93,6 +122,32 @@ export function Dashboard() {
           </thead>
           <tbody>
             {apidata ? (
+              apidata
+                ?.filter((item) => {
+                  return searchquery.toString() === ""
+                    ? item
+                    : item.stock.toString().includes(searchquery);
+                })
+                .map((ele, index) => {
+                  return (
+                    <tr key={ele._id} className="text-center">
+                      <th scope="row">{index + 1}</th>
+                      <td>{ele.name}</td>
+                      <td>{ele.stock}</td>
+                      <td>{ele.sold}</td>
+                      <td style={{ color: ele.stock > 0 ? "" : "red" }}>
+                        {ele.stock > 0 ? ele.stock : "Out of Stock"}
+                      </td>
+                    </tr>
+                  );
+                })
+            ) : (
+              <tr>
+                <td>There is no Data</td>
+              </tr>
+            )}
+
+            {/* {apidata ? (
               apidata?.map((ele, index) => {
                 return (
                   <tr key={ele._id} className="text-center">
@@ -100,13 +155,15 @@ export function Dashboard() {
                     <td>{ele.name}</td>
                     <td>{ele.stock}</td>
                     <td>{ele.sold}</td>
-                    <td>{ele.stock}</td>
+                    <td style={{ color: ele.stock > 0 ? "" : "red" }}>
+                      {ele.stock > 0 ? ele.stock : "Out of Stock"}
+                    </td>
                   </tr>
                 );
               })
             ) : (
               <h1>NO data FOUND</h1>
-            )}
+            )} */}
           </tbody>
         </table>
       </div>

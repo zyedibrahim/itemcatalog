@@ -86,6 +86,13 @@ export function CatagoriesPage() {
 
   const navigate = useNavigate();
 
+  const [searchquery, setsearchquery] = useState("");
+
+  const handlechangeserach = (e) => {
+    console.log(apidata);
+    setsearchquery(e.target.value);
+  };
+
   return (
     <div className="container">
       <div className="row mb-4 mt-5 d-flex justify-content-center ">
@@ -97,6 +104,7 @@ export function CatagoriesPage() {
               </span>
               <input
                 type="text"
+                onChange={handlechangeserach}
                 className="form-control"
                 placeholder="Search"
                 aria-label="search"
@@ -128,6 +136,43 @@ export function CatagoriesPage() {
               </thead>
               <tbody>
                 {apidata ? (
+                  apidata
+                    ?.filter((item) => {
+                      return searchquery.toLowerCase() === ""
+                        ? item
+                        : item.catagories.toLowerCase().includes(searchquery);
+                    })
+                    .map((ele, index) => {
+                      return (
+                        <tr key={ele._id} className="text-center">
+                          <th scope="row">{index + 1}</th>
+                          <td>{ele.catagories}</td>
+                          <td>
+                            <div className="btn-con d-flex justify-content-center gap-3">
+                              <button
+                                onClick={() =>
+                                  navigate(`/edit/catagories/${ele._id}`)
+                                }
+                                className="btn btn-warning"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => deletefun(ele._id)}
+                                className="btn btn-danger"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                ) : (
+                  <h1>NO data FOUND</h1>
+                )}
+
+                {/* {apidata ? (
                   apidata?.map((ele, index) => {
                     return (
                       <tr key={ele._id} className="text-center">
@@ -156,7 +201,7 @@ export function CatagoriesPage() {
                   })
                 ) : (
                   <h1>NO data FOUND</h1>
-                )}
+                )} */}
               </tbody>
             </table>
           </div>

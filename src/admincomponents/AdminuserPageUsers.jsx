@@ -58,6 +58,13 @@ export function AdminuserPageUsers() {
     getdataorder();
   }, [nxtpage]);
 
+  const [searchquery, setsearchquery] = useState("");
+  const handlechangeserach = (e) => {
+    console.log(alldata);
+
+    setsearchquery(e.target.value);
+  };
+
   return (
     <div className="container">
       {nxtpage !== "false" ? (
@@ -69,6 +76,7 @@ export function AdminuserPageUsers() {
                   Search
                 </span>
                 <input
+                  onChange={handlechangeserach}
                   type="text"
                   className="form-control "
                   placeholder="Search"
@@ -94,30 +102,36 @@ export function AdminuserPageUsers() {
                   </thead>
                   <tbody>
                     {alldata ? (
-                      alldata?.map((ele, index) => {
-                        return (
-                          <tr key={index} className="text-center">
-                            <th scope="row">{index + 1}</th>
-                            <td>{ele.username}</td>
-                            <td>{ele.email}</td>
-                            <td>{ele.roll}</td>
-                            <td>
-                              <div className="btn-con d-grid">
-                                <button
-                                  onClick={() => {
-                                    setorderdata(ele);
-                                    setnxtpage("false");
-                                    console.log(orderdata, "addressa");
-                                  }}
-                                  className="btn btn-info"
-                                >
-                                  View Orders
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
+                      alldata
+                        ?.filter((item) => {
+                          return searchquery.toLowerCase() === ""
+                            ? item
+                            : item.username.toLowerCase().includes(searchquery);
+                        })
+                        .map((ele, index) => {
+                          return (
+                            <tr key={index} className="text-center">
+                              <th scope="row">{index + 1}</th>
+                              <td>{ele.username}</td>
+                              <td>{ele.email}</td>
+                              <td>{ele.roll}</td>
+                              <td>
+                                <div className="btn-con d-grid">
+                                  <button
+                                    onClick={() => {
+                                      setorderdata(ele);
+                                      setnxtpage("false");
+                                      console.log(orderdata, "addressa");
+                                    }}
+                                    className="btn btn-info"
+                                  >
+                                    View Orders
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
                     ) : (
                       <h1>No Data Found</h1>
                     )}
