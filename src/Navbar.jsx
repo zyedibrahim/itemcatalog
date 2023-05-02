@@ -130,7 +130,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                     aria-current="page"
                     to="/dashboard"
                   >
-                    <i className="me-2 fa-solid fa-house-user"></i>
+                    <i
+                      class="fa-solid fa-gauge me-2"
+                      style={{ color: "#fafafa" }}
+                    ></i>
                     Dashboard
                   </Link>
                 </li>
@@ -144,7 +147,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                     aria-current="page"
                     to="/adminproducts"
                   >
-                    <i className="me-2 fa-solid fa-house-user"></i>
+                    <i
+                      class="fa-solid me-2 fa-bag-shopping"
+                      style={{ color: "#fafafa" }}
+                    ></i>
                     Product
                   </Link>
                 </li>
@@ -158,7 +164,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                     aria-current="page"
                     to="/admincatagories"
                   >
-                    <i className="me-2 fa-solid fa-house-user"></i>
+                    <i
+                      className="fa-solid fa-bars me-2"
+                      style={{ color: "#fafafa" }}
+                    ></i>
                     Catagories
                   </Link>
                 </li>
@@ -172,7 +181,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                     aria-current="page"
                     to="/adminpageusers"
                   >
-                    <i className="me-2 fa-solid fa-house-user"></i>
+                    <i
+                      class="fa-solid fa-user me-2"
+                      style={{ color: "#fafafa" }}
+                    ></i>{" "}
                     Users
                   </Link>
                 </li>
@@ -205,14 +217,20 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                   }}
                   className="btn btn-nav cart"
                 >
-                  logout
+                  <i
+                    className="fa-solid fa-right-to-bracket"
+                    style={{ color: "white" }}
+                  ></i>
                 </button>
               </li>
             ) : (
               <li className="nav-item">
                 <button className="btn btn-nav cart">
                   <Link className="nav-link text-white" to="/login">
-                    Login
+                    <i
+                      className="fa-solid fa-right-to-bracket"
+                      style={{ color: "black" }}
+                    ></i>
                   </Link>
                 </button>
               </li>

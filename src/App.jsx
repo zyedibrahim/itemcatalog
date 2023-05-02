@@ -214,12 +214,8 @@ function ProtectedRoutAdminOrdersPage({ children }) {
 }
 
 function ProtectedRouteMyprofile({ children }) {
-  return localStorage.getItem("token") ? (
-    <section>
-      <h1>this is profile page protected</h1>
-
-      {children}
-    </section>
+  return localStorage.getItem("token") || localStorage.getItem("adtoken") ? (
+    <section>{children}</section>
   ) : (
     <Navigate to="/" />
   );

@@ -20,6 +20,10 @@ export function Dashboard() {
     (total, product) => total + product.stock,
     0
   );
+  const totalsold = apidata?.reduce(
+    (total, product) => total + product.sold,
+    0
+  );
 
   // console.log(totalstock);
   return (
@@ -40,6 +44,7 @@ export function Dashboard() {
             <div className="card-body">
               <div className="card-title">
                 <h4 className="text-center card-text">Quantity Bought</h4>
+                <h4 className="text-center">{dataforcard?.length}</h4>
               </div>
             </div>
           </div>
@@ -49,6 +54,7 @@ export function Dashboard() {
             <div className="card-body">
               <div className="card-title">
                 <h4 className="text-center card-text">Sold</h4>
+                <h4 className="text-center card-text">{totalstock}</h4>
               </div>
             </div>
           </div>
@@ -92,8 +98,8 @@ export function Dashboard() {
                   <tr key={ele._id} className="text-center">
                     <th scope="row">{index + 1}</th>
                     <td>{ele.name}</td>
-                    <td>0</td>
-                    <td>0</td>
+                    <td>{ele.stock}</td>
+                    <td>{ele.sold}</td>
                     <td>{ele.stock}</td>
                   </tr>
                 );

@@ -51,6 +51,7 @@ export function Login() {
     if (jsondata.status === "Login successful") {
       if (!jsondata.token) {
         localStorage.setItem("adtoken", jsondata.adtoken);
+        localStorage.setItem("_id", jsondata._id);
         notifysuccess(jsondata.status);
         setTimeout(() => {
           navigate("/dashboard");

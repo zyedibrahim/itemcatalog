@@ -29,10 +29,6 @@ export function MyOrders() {
 
   console.log(alldata, "outside");
 
-  let date = new Date();
-
-  console.log(date);
-
   return (
     <div className="text-white container ">
       <h1 className="text-center mt-5">My Orders</h1>

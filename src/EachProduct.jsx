@@ -57,7 +57,7 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
             <div className="row">
               {eachdata?.map((ele, index) => {
                 return (
-                  <div key={ele._id}>
+                  <div className="row" key={ele._id}>
                     <div className="col-md-4">
                       <img
                         className="img-fluid rounded-start"

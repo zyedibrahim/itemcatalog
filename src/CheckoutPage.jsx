@@ -113,6 +113,8 @@ export function CheckoutPage({ cartitem, quantity }) {
             quantity={quantity}
             qun
             cprouduct={cprouduct}
+            setaddress={setaddress}
+            getdata={getdata}
           />
         </div>
       </div>
@@ -305,7 +307,7 @@ const formvalidationschemapay = yup.object({
   payment: yup.string().required("select payment"),
 });
 
-function Addadressfun({ cprouduct, quantity, address }) {
+function Addadressfun({ cprouduct, quantity, address, setaddress, getdata }) {
   const price = [...cprouduct];
   const totalPri = cprouduct.reduce(
     (total, product) => total + product.price,
@@ -356,7 +358,33 @@ function Addadressfun({ cprouduct, quantity, address }) {
 
   const [editdatafr, seteditdatafr] = useState([]);
 
-  function delefun() {}
+  async function delefun(index) {
+    setaddress(address.filter((_, i) => i !== index));
+    console.log(address, "delfun");
+    const idfrmstr = localStorage.getItem("_id");
+    const dataf = await fetch(`${API}/add/address/del/${idfrmstr}`, {
+      method: "PUT",
+      body: JSON.stringify(address),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const jsondata = await dataf.json();
+    console.log(jsondata);
+    if (jsondata.status === "200 ok") {
+      setTimeout(() => {
+        getdata();
+      }, 1000);
+    }
+  }
+
+  useEffect(() => {}, [address]);
+
+  const deladdress = async () => {
+    console.log(address, "adrres fopr");
+  };
+
+  console.log(address, "out address filete");
 
   function editfun(editdata) {
     console.log(editdata);
@@ -414,7 +442,7 @@ function Addadressfun({ cprouduct, quantity, address }) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => console.log(index)}
+                      onClick={() => delefun(index)}
                       className="btn btn-danger"
                     >
                       del
