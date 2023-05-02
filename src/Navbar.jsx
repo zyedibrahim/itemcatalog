@@ -68,9 +68,9 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
       (ele) => ele._id !== data._id,
       (data.price = 0)
     );
-    //
+    //npm
     console.log(data.price, "price");
-    y;
+
     setProducts(dataddd);
     setadddata(dataad);
   };
