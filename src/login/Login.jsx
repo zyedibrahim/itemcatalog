@@ -201,6 +201,19 @@ export function Login() {
             </form>
           </div>
         </div>
+
+        <div className="row mt-3 mb-3 d-flex justify-content-end">
+          <div className="col-10 col-md-3">
+            <div className="card text-center bg-dark text-light">
+              <div className="card-body">
+                <div className="card-text text-center"> Admin Account </div>
+
+                <div className="card-text"> Name : adminuser </div>
+                <div className="card-text"> Password : 123456789 </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <ToastContainer />
     </div>

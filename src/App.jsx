@@ -40,6 +40,15 @@ function App() {
         setadddata={setadddata}
         adddata={adddata}
       />
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong> IF You Faceing Some Error Please give A Feedback</strong>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
 
       <Routes>
         <Route path="/" element={<Home />} />

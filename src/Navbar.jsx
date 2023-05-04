@@ -131,7 +131,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                     to="/dashboard"
                   >
                     <i
-                      class="fa-solid fa-gauge me-2"
+                      className="fa-solid fa-gauge me-2"
                       style={{ color: "#fafafa" }}
                     ></i>
                     Dashboard
@@ -148,7 +148,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                     to="/adminproducts"
                   >
                     <i
-                      class="fa-solid me-2 fa-bag-shopping"
+                      className="fa-solid me-2 fa-bag-shopping"
                       style={{ color: "#fafafa" }}
                     ></i>
                     Product
@@ -182,7 +182,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                     to="/adminpageusers"
                   >
                     <i
-                      class="fa-solid fa-user me-2"
+                      className="fa-solid fa-user me-2"
                       style={{ color: "#fafafa" }}
                     ></i>{" "}
                     Users
