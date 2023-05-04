@@ -12,9 +12,15 @@ export function MySelect() {
     console.log(newTodo, "newtodos");
   };
 
-  const handleDelete = (index) => {
-    setTodos(todos.filter((_, i) => i !== index));
-  };
+  // const handleDelete = (index) => {
+  //   setTodos(todos.filter((_, i) => i !== index));
+  // };
+
+  function handleDelete(index) {
+    const newData = [...todos];
+    newData.splice(index, 1);
+    setTodos(newData);
+  }
 
   return (
     <div>

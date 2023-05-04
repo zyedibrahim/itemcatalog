@@ -56,7 +56,7 @@ export function Dashboard() {
             <div className="card-body">
               <div className="card-title">
                 <h4 className="text-center card-text">Quantity Bought</h4>
-                <h4 className="text-center">{dataforcard?.length}</h4>
+                <h4 className="text-center">{totalstock}</h4>
               </div>
             </div>
           </div>

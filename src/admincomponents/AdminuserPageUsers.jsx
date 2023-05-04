@@ -163,7 +163,14 @@ export function AdminuserPageUsers() {
               <div className=" mb-3 d-flex justify-content-center">
                 <div className="text-center col-10 col-md-6">
                   <h4>
-                    Phone : <span className="h2">{orderdata.phone}</span>{" "}
+                    Phone :{" "}
+                    <span className="h2">
+                      {orderdata.phone ? (
+                        orderdata.phone
+                      ) : (
+                        <small className="me-2">Not Updated</small>
+                      )}
+                    </span>{" "}
                   </h4>
                 </div>
               </div>

@@ -6,7 +6,7 @@ import { API } from "../data";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const formvalidationschema = yup.object({
+export const formvalidationschema = yup.object({
   username: yup.string().required("This is fiels is required"),
   password: yup
     .string()
@@ -66,7 +66,8 @@ export function Login() {
         }, 3000);
       }
     } else {
-      notifyfail("something went wrong");
+      console.log(jsondata.status, "erroro message noitiudy");
+      notifyfail(jsondata.status);
     }
   };
 

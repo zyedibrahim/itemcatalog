@@ -15,18 +15,9 @@ const formvalidationschemaaddress = yup.object({
   pincode: yup.number().required("Pincode is required"),
   phone: yup.number().required("Phone is required"),
 });
-const formvalidationschemaaddressedit = yup.object({
-  country: yup.string().required("This is fiels is required"),
-  firstname: yup.string().required("First name is required"),
-  lastname: yup.string().required("Last name is required"),
-  address: yup.string().required("Address is required"),
-  state: yup.string().required("State is required"),
-  district: yup.string().required("District is required"),
-  pincode: yup.number().required("Pincode is required"),
-  phone: yup.number().required("Phone is required"),
-});
 
 export function CheckoutPage({ cartitem, quantity }) {
+  const navigate = useNavigate();
   const [cprouduct, setcproduct] = useState([cartitem]);
 
   const getid = localStorage.getItem("_id");
@@ -37,7 +28,9 @@ export function CheckoutPage({ cartitem, quantity }) {
       .then((data) => setaddress(data.addressdata))
       .catch((err) => console.log(err));
   };
-  console.log(address, "address");
+
+  const [editdtstr, seteditdtstr] = useState();
+
   useEffect(() => {
     getdata();
   }, []);
@@ -46,11 +39,18 @@ export function CheckoutPage({ cartitem, quantity }) {
     setcproduct(cartitem);
   }, [cartitem]);
 
+  function generateRandomNumber() {
+    return Math.floor(Math.random() * 9000) + 1000;
+  }
+
+  const [nxtpage, setnxtpage] = useState(false);
+
+  const randomNumber = generateRandomNumber();
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
+        id: randomNumber,
         country: "",
-
         firstname: "",
         lastname: "",
         address: "",
@@ -91,7 +91,7 @@ export function CheckoutPage({ cartitem, quantity }) {
     }
   }, [showButton]);
 
-  return (
+  return nxtpage === false ? (
     <div className="text-white container">
       <h1>checkout page</h1>
       <div className="row d-flex justify-content-center ">
@@ -113,12 +113,11 @@ export function CheckoutPage({ cartitem, quantity }) {
             quantity={quantity}
             qun
             cprouduct={cprouduct}
-            setaddress={setaddress}
-            getdata={getdata}
+            setnxtpage={setnxtpage}
+            seteditdtstr={seteditdtstr}
           />
         </div>
       </div>
-
       {/* address template */}
       <div
         className="modal fade"
@@ -299,6 +298,10 @@ export function CheckoutPage({ cartitem, quantity }) {
         </div>
       </div>
     </div>
+  ) : editdtstr ? (
+    <Editadd editdtstr={editdtstr} setnxtpage={setnxtpage} />
+  ) : (
+    <h1>Loading...</h1>
   );
 }
 
@@ -307,7 +310,13 @@ const formvalidationschemapay = yup.object({
   payment: yup.string().required("select payment"),
 });
 
-function Addadressfun({ cprouduct, quantity, address, setaddress, getdata }) {
+function Addadressfun({
+  cprouduct,
+  quantity,
+  address,
+  setnxtpage,
+  seteditdtstr,
+}) {
   const price = [...cprouduct];
   const totalPri = cprouduct.reduce(
     (total, product) => total + product.price,
@@ -356,171 +365,170 @@ function Addadressfun({ cprouduct, quantity, address, setaddress, getdata }) {
     }
   };
 
-  const [editdatafr, seteditdatafr] = useState([]);
+  async function delefu(data, index) {
+    const dataid = { iddata: data.id };
+    console.log(dataid);
 
-  async function delefun(index) {
-    setaddress(address.filter((_, i) => i !== index));
-    console.log(address, "delfun");
-    const idfrmstr = localStorage.getItem("_id");
-    const dataf = await fetch(`${API}/add/address/del/${idfrmstr}`, {
-      method: "PUT",
-      body: JSON.stringify(address),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const jsondata = await dataf.json();
-    console.log(jsondata);
-    if (jsondata.status === "200 ok") {
-      setTimeout(() => {
-        getdata();
-      }, 1000);
-    }
+    // const idfrmstr = localStorage.getItem("_id");
+    // const dataf = await fetch(`${API}/add/address/del/${idfrmstr}`, {
+    //   method: "PUT",
+    //   body: JSON.stringify(address),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    // const jsondata = await dataf.json();
+    // console.log(jsondata);
+    // if (jsondata.status === "200 ok") {
+    //   setTimeout(() => {
+    //     getdata();
+    //   }, 1000);
+    // }
   }
 
-  useEffect(() => {}, [address]);
-
-  const deladdress = async () => {
-    console.log(address, "adrres fopr");
+  const delefun = async (data, index) => {
+    delefu(data, index);
   };
 
   console.log(address, "out address filete");
 
-  function editfun(editdata) {
-    console.log(editdata);
-    seteditdatafr(editdata);
+  function editfun(data) {
+    setnxtpage(true);
+    console.log("tirgger");
+    seteditdtstr(data);
   }
+  useEffect(() => {}, [address]);
 
   return (
     <div>
-      <form
-        className="row d-flex justify-content-center"
-        onSubmit={handleSubmit}
-      >
-        <div className="col-12 mb-3 col-md-6">
-          {address?.map((ele, index) => {
-            return address !== "undefined" ? (
-              <div key={index}>
-                <div className="form-check">
-                  <input
-                    name="checkadd"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    className="form-check-input"
-                    type="radio"
-                    value={index}
-                    id={`flexRadioDefault${index}`}
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor={`flexRadioDefault${index}`}
-                  >
-                    <div>
-                      Name : {ele.firstname} {ele.lastname}
-                    </div>
+      <form onSubmit={handleSubmit}>
+        <div className="row d-flex justify-content-center">
+          <div className="col-12 mb-3 col-md-6">
+            {address ? (
+              address?.map((ele, index) => {
+                return address !== "undefined" ? (
+                  <div key={index}>
+                    <div className="form-check">
+                      <input
+                        name="checkadd"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        className="form-check-input"
+                        type="radio"
+                        value={index}
+                        id={`flexRadioDefault${index}`}
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor={`flexRadioDefault${index}`}
+                      >
+                        <div>
+                          Name : {ele.firstname} {ele.lastname}
+                        </div>
 
-                    <div>
-                      Address : {ele.address} {ele.state}
-                      {ele.district}
+                        <div>
+                          Address : {ele.address} {ele.state}
+                          {ele.district}
+                        </div>
+                        <div>
+                          Pincode:
+                          {ele.pincode}
+                        </div>
+                        <div>Phone : {ele.phone}</div>
+                      </label>
+                      <div className="config-con mt-2 mb-2 d-flex gap-3">
+                        {/* edit button address */}
+                        <button
+                          className="btn btn-success"
+                          type="button"
+                          onClick={() => editfun(ele)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => delefun(ele, index)}
+                          className="btn btn-danger"
+                        >
+                          del
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      Pincode:
-                      {ele.pincode}
-                    </div>
-                    <div>Phone : {ele.phone}</div>
-                  </label>
-                  <div className="config-con mt-2 mb-2 d-flex gap-3">
-                    {/* edit button address */}
-                    <button
-                      className="btn btn-success"
-                      type="button"
-                      onClick={() => editfun(ele)}
-                      data-bs-toggle="modal"
-                      data-bs-target="#staticBackdrop1"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => delefun(index)}
-                      className="btn btn-danger"
-                    >
-                      del
-                    </button>
+                    {touched.checkadd && errors.checkadd ? errors.checkadd : ""}
                   </div>
-                  <EditAddress editdatafr={editdatafr} />
-                </div>
-                {touched.checkadd && errors.checkadd ? errors.checkadd : ""}
-              </div>
+                ) : (
+                  <h1 className="text-white">Please Add Address</h1>
+                );
+              })
             ) : (
-              <h1 className="text-white">Please Add Address</h1>
-            );
-          })}
-        </div>
-        <div className="col-12 col-md-6">
-          <div className="mb-3">
-            <h3>Payment Mode</h3>
-            <select
-              onChange={handleChange}
-              value={values.payment}
-              onBlur={handleBlur}
-              name="payment"
-              defaultValue="Offlinepay"
-              className="form-select form-select-lg mb-3"
-              aria-label="form-select-lg example"
-            >
-              <option value="onlinepay">Online Payment</option>
-              <option value="offlinepay">Offline Payment</option>
-            </select>
+              <h4 className="text-white text-center ">Add Address</h4>
+            )}
+          </div>
+          <div className="col-12 col-md-6">
             <div className="mb-3">
-              {touched.payment && errors.payment ? errors.payment : ""}
+              <h3>Payment Mode</h3>
+              <select
+                onChange={handleChange}
+                value={values.payment}
+                onBlur={handleBlur}
+                name="payment"
+                defaultValue="Offlinepay"
+                className="form-select form-select-lg mb-3"
+                aria-label="form-select-lg example"
+              >
+                <option value="onlinepay">Online Payment</option>
+                <option value="offlinepay">Offline Payment</option>
+              </select>
+              <div className="mb-3">
+                {touched.payment && errors.payment ? errors.payment : ""}
+              </div>
+
+              <div className="h4">Order summary</div>
             </div>
 
-            <div className="h4">Order summary</div>
-          </div>
-
-          <div className="place-ordercon">
-            {cprouduct?.map((ele, index) => {
-              return (
-                <div
-                  key={index}
-                  className="con-2-inside d-flex justify-content-between"
-                >
-                  <div className="middle-con d-flex">
-                    <div className="img-cont ">
-                      <img
-                        className="checkout-img"
-                        src={ele.img_pro}
-                        alt={ele.name}
-                      />
-                    </div>
-                    <div className="cont-body">
-                      {ele.name}
-                      <div className="quantity">
-                        Qty : {quantity} {ele.quantity} /
-                        <span className="me-2">{ele.q_type}</span>
+            <div className="place-ordercon">
+              {cprouduct?.map((ele, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="con-2-inside d-flex justify-content-between"
+                  >
+                    <div className="middle-con d-flex">
+                      <div className="img-cont ">
+                        <img
+                          className="checkout-img"
+                          src={ele.img_pro}
+                          alt={ele.name}
+                        />
+                      </div>
+                      <div className="cont-body">
+                        {ele.name}
+                        <div className="quantity">
+                          Qty : {quantity} {ele.quantity} /
+                          <span className="me-2">{ele.q_type}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-            <div className="amount-con fs-5">
-              Amount : Rs - : {price[0].price}{" "}
-            </div>
+                );
+              })}
+              <div className="amount-con fs-5">
+                Amount : Rs - : {price[0].price}{" "}
+              </div>
 
-            <div className="fs-5 delivery-charge mt-4 d-flex justify-content-end ">
-              <div className="inside-con">Delivery :-Rs: 0</div>
-            </div>
-            <div className="total fs-3 d-flex mt-2 justify-content-end">
-              <div className="inside-con">Total :- Rs : {totalPri}</div>
-            </div>
+              <div className="fs-5 delivery-charge mt-4 d-flex justify-content-end ">
+                <div className="inside-con">Delivery :-Rs: 0</div>
+              </div>
+              <div className="total fs-3 d-flex mt-2 justify-content-end">
+                <div className="inside-con">Total :- Rs : {totalPri}</div>
+              </div>
 
-            <div className="d-grid mb-3 mt-3">
-              <button type="submit" className="btn btn-secondary">
-                <i className="me-2 fa-solid fa-lock"></i>
-                Place Order
-              </button>
+              <div className="d-grid mb-3 mt-3">
+                <button type="submit" className="btn btn-secondary">
+                  <i className="me-2 fa-solid fa-lock"></i>
+                  Place Order
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -529,222 +537,182 @@ function Addadressfun({ cprouduct, quantity, address, setaddress, getdata }) {
   );
 }
 
-function EditAddress({ editdatafr }) {
-  return editdatafr ? (
-    <Addaddress editdatafr={editdatafr} />
-  ) : (
-    <h1 className="text-white">Loading...</h1>
-  );
-}
-
-function Addaddress({ editdatafr }) {
-  // const [getaddress, setaddress] = useState([]);
-
-  console.log(editdatafr.country, "from adddaress");
-
-  // const idfrmstr = localStorage.getItem("_id");
-
-  // // const getcontact = async () => {
-  // //   const apidata = await fetch(`${API}/add/address/${idfrmstr}`);
-  // //   const data = await apidata.json();
-  // //   setaddress(data.addressdata);
-  // // };
-
-  // // useEffect(() => {
-  // //   getcontact();
-  // // }, []);
-
-  // console.log(getaddress, "getaddress");
+function Editadd({ editdtstr, setnxtpage }) {
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
-        country: editdatafr?.country,
-        firstname: editdatafr?.firstname,
-        lastname: editdatafr?.lastname,
-        address: editdatafr?.address,
-        state: editdatafr?.state,
-        district: editdatafr?.district,
-        pincode: editdatafr?.pincode,
-        phone: editdatafr?.phone,
+        country: editdtstr.country,
+        firstname: editdtstr.firstname,
+        lastname: editdtstr.lastname,
+        address: editdtstr.address,
+        state: editdtstr.state,
+        district: editdtstr.district,
+        pincode: editdtstr.pincode,
+        phone: editdtstr.phone,
       },
-      validationSchema: formvalidationschemaaddressedit,
+      validationSchema: formvalidationschemaaddress,
       onSubmit: (data) => {
         console.log(data);
       },
     });
+  console.log(editdtstr.id);
 
   return (
-    <div
-      className="modal fade"
-      id="staticBackdrop1"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabIndex="-1"
-      aria-labelledby="staticBackdropLabel"
-      aria-hidden="true"
-    >
-      <div className="modal-dialog text-dark mt-d">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h1 className="modal-title fs-5" id="staticBackdropLabel">
-              Edit Address
-            </h1>
-            <button
-              // ref={buttonRef}
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <form onSubmit={handleSubmit}>
-              <div className="row">
-                <div className="col-12">
-                  <div className="mb-3">
-                    <input
-                      type="text"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="country"
-                      placeholder="Country"
-                      value={values.country}
-                      className="form-control mb-3"
-                      aria-label="form-select-lg example"
-                    />
+    <div>
+      <div className="row">
+        <div className="col">
+          <div className="card">
+            <div className="card-body">
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="country"
+                        placeholder="Country"
+                        value={values.country}
+                        className="form-control mb-3"
+                        aria-label="form-select-lg example"
+                      />
 
-                    {touched.country && errors.country ? errors.country : ""}
+                      {touched.country && errors.country ? errors.country : ""}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-12 col-md-6">
-                  <div className="mb-3">
-                    <input
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="firstname"
-                      value={values.firstname}
-                      type="text"
-                      placeholder="First Name"
-                      className="form-control"
-                    />
-                    {errors.firstname && touched.firstname
-                      ? errors.firstname
-                      : ""}
+                <div className="row">
+                  <div className="col-12 col-md-6">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="firstname"
+                        value={values.firstname}
+                        type="text"
+                        placeholder="First Name"
+                        className="form-control"
+                      />
+                      {errors.firstname && touched.firstname
+                        ? errors.firstname
+                        : ""}
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="lastname"
+                        value={values.lastname}
+                        type="text"
+                        placeholder="Last Name"
+                        className="form-control"
+                      />
+                      {errors.lastname && touched.lastname
+                        ? errors.lastname
+                        : ""}
+                    </div>
                   </div>
                 </div>
-                <div className="col-12 col-md-6">
-                  <div className="mb-3">
-                    <input
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="lastname"
-                      value={values.lastname}
-                      type="text"
-                      placeholder="Last Name"
-                      className="form-control"
-                    />
-                    {errors.lastname && touched.lastname ? errors.lastname : ""}
-                  </div>
-                </div>
-              </div>
 
-              <div className="row">
-                <div className="col-12">
-                  <div className="mb-3">
-                    <textarea
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="address"
-                      value={values.address}
-                      placeholder="Address & arew and State"
-                      className="form-control"
-                      id="exampleFormControlTextarea1"
-                      rows="3"
-                    ></textarea>
-                    {errors.address && touched.address ? errors.address : ""}
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <textarea
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="address"
+                        value={values.address}
+                        placeholder="Address & arew and State"
+                        className="form-control"
+                        id="exampleFormControlTextarea1"
+                        rows="3"
+                      ></textarea>
+                      {errors.address && touched.address ? errors.address : ""}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-12 col-md-4">
-                  <div className="mb-3">
-                    <input
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="state"
-                      value={values.state}
-                      type="text"
-                      placeholder="State"
-                      className="form-control"
-                    />
+                <div className="row">
+                  <div className="col-12 col-md-4">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="state"
+                        value={values.state}
+                        type="text"
+                        placeholder="State"
+                        className="form-control"
+                      />
+                    </div>
+                    {errors.state && touched.state ? errors.state : ""}
                   </div>
-                  {errors.state && touched.state ? errors.state : ""}
-                </div>
-                <div className="col-12 col-md-4">
-                  <div className="mb-3">
-                    <input
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="district"
-                      value={values.district}
-                      type="text"
-                      placeholder="District"
-                      className="form-control"
-                    />
+                  <div className="col-12 col-md-4">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="district"
+                        value={values.district}
+                        type="text"
+                        placeholder="District"
+                        className="form-control"
+                      />
+                    </div>
+                    {errors.district && touched.district ? errors.district : ""}
                   </div>
-                  {errors.district && touched.district ? errors.district : ""}
+                  <div className="col-12 col-md-4">
+                    <div className="mb-3">
+                      <input
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="pincode"
+                        value={values.pincode}
+                        type="number"
+                        placeholder="Pincode"
+                        className="form-control"
+                      />
+                      {errors.pincode && touched.pincode ? errors.pincode : ""}
+                    </div>
+                  </div>
                 </div>
-                <div className="col-12 col-md-4">
-                  <div className="mb-3">
+
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3"></div>
                     <input
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="pincode"
-                      value={values.pincode}
                       type="number"
-                      placeholder="Pincode"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      name="phone"
+                      value={values.phone}
+                      placeholder="Phone Number"
                       className="form-control"
                     />
-                    {errors.pincode && touched.pincode ? errors.pincode : ""}
+                    {errors.phone && touched.phone ? errors.phone : ""}
                   </div>
                 </div>
-              </div>
 
-              <div className="row">
-                <div className="col-12">
-                  <div className="mb-3"></div>
-                  <input
-                    type="number"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    name="phone"
-                    value={values.phone}
-                    placeholder="Phone Number"
-                    className="form-control"
-                  />
-                  {errors.phone && touched.phone ? errors.phone : ""}
+                <div className="modal-footer">
+                  <button
+                    type="submit"
+                    className="btn btn-success"
+                    data-bs-dismiss="update"
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => setnxtpage(false)}
+                  >
+                    Cancel
+                  </button>
                 </div>
-              </div>
-
-              <div className="modal-footer">
-                <button
-                  type="submit"
-                  className="btn btn-success"
-                  data-bs-dismiss="update"
-                >
-                  Update
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  data-bs-dismiss="modal"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>

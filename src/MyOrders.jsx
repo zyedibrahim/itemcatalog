@@ -3,9 +3,9 @@ import { API } from "./data";
 import { date } from "yup";
 export function MyOrders() {
   const [alldata, setalldata] = useState([]);
-  const adddress = alldata.newdata;
+  const adddress = alldata?.newdata;
   let datestore = "";
-  const datedel = alldata.newdata;
+  const datedel = alldata?.newdata;
 
   datestore = datedel;
   console.log(datestore, "datasore");
@@ -20,7 +20,7 @@ export function MyOrders() {
       },
     })
       .then((data) => data.json())
-      .then((data) => setalldata(data.newdata))
+      .then((data) => setalldata(data?.newdata))
       .catch((err) => console.log(err));
   };
   useEffect(() => {
@@ -93,7 +93,7 @@ export function MyOrders() {
             );
           })
         ) : (
-          <h1>Theres No Orders</h1>
+          <h1 className="text-center">Theres No Orders</h1>
         )}
       </div>
     </div>

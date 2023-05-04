@@ -20,6 +20,9 @@ import { EditCatagories } from "./admincomponents/EditCatagories";
 import { EditProduct } from "./admincomponents/EditProduct";
 import { OrderAndContactDetails } from "./admincomponents/OrderAndContactDetails";
 import { MyOrders } from "./MyOrders";
+import { Editaddress } from "./Editaddress";
+import { Forgotpage } from "./login/Forgotpage";
+import { ConfirmPassword } from "./login/ConfirmPassword";
 
 function App() {
   const [adddata, setadddata] = useState([]);
@@ -41,11 +44,19 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/forgotpage" element={<Forgotpage />} />
         <Route path="/ex" element={<MySelect />} />
         <Route
           path="/product"
           element={<Product adddata={adddata} setadddata={setadddata} />}
         />
+
+        <Route
+          path="/users/resetpassword"
+          element={<ConfirmPassword />}
+          caseSensitive
+        />
+
         <Route path="/login" element={<Login />} />
         <Route path="/createuser" element={<Createuser />} />
         <Route
@@ -142,6 +153,14 @@ function App() {
             </ProtectedRoutAdminOrdersPage>
           }
         />
+        <Route
+          path="/editaddress"
+          element={
+            <ProtectedRouteEditaddress>
+              <Editaddress />
+            </ProtectedRouteEditaddress>
+          }
+        />
 
         <Route path="/otpverify" element={<OtpVerify />} />
       </Routes>
@@ -221,6 +240,13 @@ function ProtectedRouteMyprofile({ children }) {
   );
 }
 function ProtectedRouteMyorder({ children }) {
+  return localStorage.getItem("token") ? (
+    <section>{children}</section>
+  ) : (
+    <Navigate to="/" />
+  );
+}
+function ProtectedRouteEditaddress({ children }) {
   return localStorage.getItem("token") ? (
     <section>{children}</section>
   ) : (
