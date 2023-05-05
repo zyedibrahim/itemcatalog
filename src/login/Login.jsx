@@ -15,6 +15,9 @@ export const formvalidationschema = yup.object({
 });
 
 export function Login() {
+  const notifysuccess = (data) => toast.success(data);
+  const notifyfail = (data) => toast.error(data);
+
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
@@ -45,8 +48,6 @@ export function Login() {
     });
     const jsondata = await dataf.json();
     console.log(jsondata);
-    const notifysuccess = (data) => toast.success(data);
-    const notifyfail = (data) => toast.error(data);
 
     if (jsondata.status === "Login successful") {
       if (!jsondata.token) {
@@ -80,14 +81,14 @@ export function Login() {
             <form className="card-body" onSubmit={handleSubmit}>
               <ul className="nav nav-pills nav-justified mb-3" id="ex1">
                 <li className="nav-item" role="presentation">
-                  <a className="nav-link active" id="tab-login" href="/login">
+                  <Link className="nav-link active" id="tab-login" to="/login">
                     Login
-                  </a>
+                  </Link>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <a className="nav-link" id="tab-register" href="/createuser">
+                  <Link className="nav-link" id="tab-register" to="/createuser">
                     Register
-                  </a>
+                  </Link>
                 </li>
               </ul>
 

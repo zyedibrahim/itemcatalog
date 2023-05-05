@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
-// import dataaddress from "./dataAddress";
 import { API } from "./data";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const formvalidationschemaaddress = yup.object({
   country: yup.string().required("This is fiels is required"),
@@ -78,7 +79,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity }) {
       },
     });
     const jsondata = await dataf.json();
-    console.log(jsondata);
+
     if (jsondata.status === "200 ok") {
       setShowButton(true);
       getdata();
@@ -133,7 +134,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity }) {
   return orderpage === false ? (
     nxtpage === false ? (
       <div className="text-white container">
-        <h1>checkout page</h1>
+        <h1 className="mt-1 mb-2">Check OutPage</h1>
         <div className="row d-flex justify-content-center ">
           <div className="col-12  mb-3 col-md-3 col-lg-3">
             <div className="d-grid mt-5">
@@ -151,6 +152,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity }) {
             <Addadressfun
               setcproduct={setcproduct}
               address={address}
+              setaddress={setaddress}
               quantity={quantity}
               qun
               cprouduct={cprouduct}
@@ -158,6 +160,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity }) {
               seteditdtstr={seteditdtstr}
               orderpagefun={orderpagefun}
               setorderpage={setorderpage}
+              getdata={getdata}
             />
           </div>
         </div>
@@ -350,7 +353,11 @@ export function CheckoutPage({ cartitem, setcartitem, quantity }) {
         </div>
       </div>
     ) : editdtstr ? (
-      <Editadd editdtstr={editdtstr} setnxtpage={setnxtpage} />
+      <Editadd
+        getdata={getdata}
+        editdtstr={editdtstr}
+        setnxtpage={setnxtpage}
+      />
     ) : (
       <h1>Loading...</h1>
     )
@@ -412,17 +419,19 @@ function Addadressfun({
   setcartitem,
   quantity,
   address,
+  setaddress,
   setnxtpage,
   seteditdtstr,
-  orderpagefun,
   setorderpage,
+  getdata,
 }) {
   const price = [...cprouduct];
   const totalPri = cprouduct.reduce(
     (total, product) => total + product.price,
     0
   );
-
+  const notifysuccess = (data) => toast.success(data);
+  const notifyfail = (data) => toast.error(data);
   const navigate = useNavigate();
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
@@ -443,6 +452,10 @@ function Addadressfun({
       },
     });
 
+  const outside = address;
+
+  console.log(outside, "outside");
+
   const putorderdata = async (data) => {
     console.log(data.product[0]._id);
     const fetchapi = await fetch(
@@ -452,7 +465,7 @@ function Addadressfun({
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
-          "x-auth-token": localStorage.getItem("adtoken"),
+          "x-auth-token": localStorage.getItem("token"),
         },
       }
     );
@@ -464,36 +477,36 @@ function Addadressfun({
     }
   };
 
-  async function delefu(data, index) {
-    const dataid = { iddata: data.id };
-    console.log(dataid);
-
-    // const idfrmstr = localStorage.getItem("_id");
-    // const dataf = await fetch(`${API}/add/address/del/${idfrmstr}`, {
-    //   method: "PUT",
-    //   body: JSON.stringify(address),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // const jsondata = await dataf.json();
-    // console.log(jsondata);
-    // if (jsondata.status === "200 ok") {
-    //   setTimeout(() => {
-    //     getdata();
-    //   }, 1000);
-    // }
-  }
-
-  const delefun = async (data, index) => {
-    delefu(data, index);
+  const delefun = (data, index) => {
+    // console.log(data, "deldaata");
+    delefu(data.id);
   };
+
+  async function delefu(data) {
+    const dataid = { id: data };
+
+    const idfrmstr = localStorage.getItem("_id");
+    const dataf = await fetch(`${API}/add/address/del/${idfrmstr}`, {
+      method: "POST",
+      body: JSON.stringify(dataid),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const jsondata = await dataf.json();
+
+    if (jsondata.status === "200 ok") {
+      getdata();
+    } else {
+      notifyfail("Something went wrong");
+      getdata();
+    }
+  }
 
   console.log(address, "out address filete");
 
   function editfun(data) {
     setnxtpage(true);
-    console.log("tirgger");
     seteditdtstr(data);
   }
   useEffect(() => {}, [address]);
@@ -546,12 +559,13 @@ function Addadressfun({
                         </button>
                         <button
                           type="button"
-                          onClick={() => delefun(ele, index)}
+                          onClick={() => delefun(ele)}
                           className="btn btn-danger"
                         >
                           del
                         </button>
                       </div>
+                      <ToastContainer />
                     </div>
                     {touched.checkadd && errors.checkadd ? errors.checkadd : ""}
                   </div>
@@ -636,10 +650,13 @@ function Addadressfun({
   );
 }
 
-function Editadd({ editdtstr, setnxtpage }) {
+function Editadd({ editdtstr, setnxtpage, getdata }) {
+  const notifysuccess = (data) => toast.success(data);
+  const notifyfail = (data) => toast.error(data);
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
+        id: editdtstr.id,
         country: editdtstr.country,
         firstname: editdtstr.firstname,
         lastname: editdtstr.lastname,
@@ -651,10 +668,33 @@ function Editadd({ editdtstr, setnxtpage }) {
       },
       validationSchema: formvalidationschemaaddress,
       onSubmit: (data) => {
-        console.log(data);
+        upddatedata(data);
       },
     });
-  console.log(editdtstr.id);
+  const navigate = useNavigate();
+
+  const upddatedata = async (data) => {
+    const fetchapi = await fetch(
+      `${API}/update/address/${localStorage.getItem("_id")}`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
+      }
+    );
+    const jsondata = await fetchapi.json();
+    const temp = await jsondata.status;
+
+    if (temp === "200 ok") {
+      getdata();
+      setnxtpage(false);
+    } else {
+      notifyfail("Something went wrong");
+    }
+  };
 
   return (
     <div>
@@ -801,7 +841,7 @@ function Editadd({ editdtstr, setnxtpage }) {
                   <button
                     type="submit"
                     className="btn btn-success me-2"
-                    data-bs-dismiss="update"
+                    // data-bs-dismiss="update"
                   >
                     Update
                   </button>
@@ -818,6 +858,7 @@ function Editadd({ editdtstr, setnxtpage }) {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

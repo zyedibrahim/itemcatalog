@@ -169,12 +169,28 @@ function App() {
           }
         />
 
-        <Route path="/otpverify" element={<OtpVerify />} />
+        <Route
+          path="/otpverify"
+          element={
+            <ProtectedRouteOTPVerify>
+              <OtpVerify />
+            </ProtectedRouteOTPVerify>
+          }
+        />
       </Routes>
     </div>
   );
 }
 
+function ProtectedRouteOTPVerify({ children }) {
+  return localStorage.getItem("otpverfyroute") ? (
+    <section className="text-white">
+      <div>{children}</div>
+    </section>
+  ) : (
+    <Navigate replace to="/home" />
+  );
+}
 function ProtectedRoutAdminPageUsers({ children }) {
   return localStorage.getItem("adtoken") ? (
     <section className="text-white">

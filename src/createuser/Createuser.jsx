@@ -3,6 +3,8 @@ import { json, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import * as yup from "yup";
 import { API } from "../data";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { Link } from "react-router-dom";
 
@@ -16,6 +18,9 @@ const formvalidationschema = yup.object({
 });
 
 export function Createuser() {
+  const notifysuccess = (data) => toast.success(data);
+  const notifyfail = (data) => toast.error(data);
+
   const navigate = useNavigate();
 
   const { values, handleSubmit, handleChange, handleBlur, errors, touched } =
@@ -33,6 +38,7 @@ export function Createuser() {
       },
     });
 
+  const otpverfyroute = Math.floor(Math.random() * 9000000000) + 1000000000;
   const signup = async (val) => {
     const api = await fetch(`${API}/signup`, {
       method: "POST",
@@ -41,8 +47,20 @@ export function Createuser() {
       },
       body: JSON.stringify(val),
     });
+
     const conjson = await api.json();
-    navigate("/otpverify");
+
+    const status = await conjson.status;
+    console.log(status);
+    if (status === "200 ok") {
+      notifysuccess("OTP Sent On Register Email Address");
+      localStorage.setItem("otpverfyroute", otpverfyroute);
+      setTimeout(() => {
+        navigate("/otpverify");
+      }, 2000);
+    } else {
+      notifyfail(status);
+    }
   };
 
   const [check, setcheck] = useState("false");
@@ -55,18 +73,18 @@ export function Createuser() {
             <div>
               <ul className="nav nav-pills nav-justified mb-3" id="ex1">
                 <li className="nav-item">
-                  <a className="nav-link " href="/login" id="tab-login">
-                    Signup
-                  </a>
+                  <Link className="nav-link " to="/login" id="tab-login">
+                    login
+                  </Link>
                 </li>
                 <li className="nav-item" role="presentation">
-                  <a
+                  <Link
                     className="nav-link active"
                     id="tab-register"
-                    href="/signup"
+                    to="/createuser"
                   >
                     Register
-                  </a>
+                  </Link>
                 </li>
               </ul>
 
