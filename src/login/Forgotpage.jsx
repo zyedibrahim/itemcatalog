@@ -25,7 +25,7 @@ export function Forgotpage() {
 
   const sendemail = async (data) => {
     await fetch(`${API}/user/forgotpassword/send`, {
-      method: "PUT",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -33,13 +33,13 @@ export function Forgotpage() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.status !== "400") {
-          successnotify(data.status);
+        if (data.status === "200 ok") {
+          successnotify("Reset Password Link Sent On Resgister Email Address");
           setTimeout(() => {
             navigate("/");
           }, 5000);
         } else {
-          warningnotify("This Email Not Exist");
+          warningnotify(data.status);
         }
       });
   };
