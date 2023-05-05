@@ -144,7 +144,11 @@ export function Navbar({
                   >
                     <i
                       className="fa-solid fa-gauge me-2"
-                      style={{ color: "#fafafa" }}
+                      style={{
+                        color: `${
+                          navbarclr === "dashboard" ? "orange" : "#fafafa"
+                        }`,
+                      }}
                     ></i>
                     Dashboard
                   </Link>
@@ -164,7 +168,9 @@ export function Navbar({
                   >
                     <i
                       className="fa-solid me-2 fa-bag-shopping"
-                      style={{ color: "#fafafa" }}
+                      style={{
+                        color: navbarclr === "products" ? "orange" : "#fafafa",
+                      }}
                     ></i>
                     Product
                   </Link>
@@ -184,7 +190,10 @@ export function Navbar({
                   >
                     <i
                       className="fa-solid fa-bars me-2"
-                      style={{ color: "#fafafa" }}
+                      style={{
+                        color:
+                          navbarclr === "catagories" ? "orange" : "#fafafa",
+                      }}
                     ></i>
                     Catagories
                   </Link>
@@ -204,7 +213,9 @@ export function Navbar({
                   >
                     <i
                       className="fa-solid fa-user me-2"
-                      style={{ color: "#fafafa" }}
+                      style={{
+                        color: navbarclr === "users" ? "orange" : "#fafafa",
+                      }}
                     ></i>{" "}
                     Users
                   </Link>

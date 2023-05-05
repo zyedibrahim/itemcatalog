@@ -3,6 +3,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { API } from "../data";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const formvalidationschema = yup.object({
   username: yup.string().required("This is fiels is required"),
@@ -44,12 +46,15 @@ export function MyProfile() {
 }
 
 function Updateprofile({ getdata }) {
+  const notifysuccess = (data) => toast.success(data);
+  const notifyfail = (data) => toast.error(data);
+
   const getid = localStorage.getItem("_id");
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
-        username: getdata.username,
-        phone: getdata.phone,
+        username: getdata?.username,
+        phone: getdata?.phone,
       },
       validationSchema: formvalidationschema,
       onSubmit: (data) => {
@@ -68,7 +73,11 @@ function Updateprofile({ getdata }) {
     });
 
     const jsonc = await dataf.json();
-    console.log(jsonc);
+    if (jsonc.status === "200 ok") {
+      notifysuccess("Profile updated successfully");
+    } else {
+      notifyfail(jsonc.status);
+    }
   };
 
   const navigate = useNavigate();
@@ -125,6 +134,9 @@ function Updateprofile({ getdata }) {
 }
 
 function UpdatePassword() {
+  const notifysuccess = (data) => toast.success(data);
+  const notifyfail = (data) => toast.error(data);
+
   const getid = localStorage.getItem("_id");
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
@@ -150,7 +162,13 @@ function UpdatePassword() {
     });
 
     const jsonc = await dataf.json();
-    console.log(jsonc);
+    console.log(jsonc.status);
+
+    if (jsonc.status !== "200 ok") {
+      notifyfail(jsonc.status);
+    } else {
+      notifysuccess("Password updated successfully");
+    }
   };
 
   const navigate = useNavigate();
@@ -220,6 +238,7 @@ function UpdatePassword() {
           </div>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 }

@@ -658,9 +658,12 @@ function Editadd({ editdtstr, setnxtpage }) {
 
   return (
     <div>
-      <div className="row">
-        <div className="col">
+      <div className="rows mt-5 d-flex justify-content-center">
+        <div className="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 ">
           <div className="card">
+            <div className="card-header text-center ">
+              <div className="h3 ">Update Address</div>
+            </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="row">
@@ -797,7 +800,7 @@ function Editadd({ editdtstr, setnxtpage }) {
                 <div className="modal-footer">
                   <button
                     type="submit"
-                    className="btn btn-success"
+                    className="btn btn-success me-2"
                     data-bs-dismiss="update"
                   >
                     Update
