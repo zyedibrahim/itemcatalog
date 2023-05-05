@@ -138,12 +138,18 @@ object-fit: contain;
 
 .fa-user{
     color:black;
+    
 }
 
 .cart{
     background-color: rgb(206, 181, 181);
         border-radius: 10px;
 }
+.cart-bg-org{
+    background-color: orange;
+        border-radius: 10px;
+}
+
 
 .btn-nav:hover{
     background-color: rgb(0, 0, 0,.2);
@@ -152,8 +158,7 @@ object-fit: contain;
 
 .clr-org{
     color: orange;
-    text-decoration: none;
-    font-size: 20px;
+
 }
 
 .plus{
@@ -207,4 +212,22 @@ object-fit: contain;
   .img-ad{
     height: 60px;
     width: 60px;
+  }
+.wrp{
+    flex-wrap:"wrap";
+}
+
+  .fa-circle-check{
+    font-size: 120px;
+
+  }
+
+  .input-w{
+    width:300px
+  }
+
+  .log-icon{
+    padding-top:5px;
+    padding-bottom:5px;
+    font-size:17px;
   }

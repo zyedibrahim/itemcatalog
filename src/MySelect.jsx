@@ -22,8 +22,42 @@ export function MySelect() {
     setTodos(newData);
   }
 
+  const date = new Date();
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  };
+  const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
+  const [
+    { value: weekday },
+    ,
+    { value: month },
+    ,
+    { value: day },
+    ,
+    { value: year },
+    ,
+    { value: hour },
+    ,
+    { value: minute },
+    ,
+    { value: second },
+    ,
+    { value: dayPeriod },
+  ] = dateTimeFormat.formatToParts(date);
+
   return (
     <div>
+      <div className="text-white">
+        {weekday}
+        {}
+      </div>
       <h1>Todo List</h1>
       <form onSubmit={handleSubmit}>
         <input

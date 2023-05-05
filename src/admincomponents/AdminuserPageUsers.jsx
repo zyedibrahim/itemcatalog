@@ -69,9 +69,9 @@ export function AdminuserPageUsers() {
     <div className="container">
       {nxtpage !== "false" ? (
         <div>
-          <div className="row mt-5 mb-3 d-flex justify-content-end">
+          <div className="row mt-5 mb-3 d-flex justify-content-center">
             <div className="col-10 col-md-6">
-              <div className="input-group input-group-lg mb-3">
+              <div className="input-group input-w input-group-md mb-3">
                 <span className="input-group-text" id="basic-addon1">
                   Search
                 </span>

@@ -18,7 +18,6 @@ import { AdminuserProduct } from "./admincomponents/AdminuserProduct";
 import { AdminuserPageUsers } from "./admincomponents/AdminuserPageUsers";
 import { EditCatagories } from "./admincomponents/EditCatagories";
 import { EditProduct } from "./admincomponents/EditProduct";
-import { OrderAndContactDetails } from "./admincomponents/OrderAndContactDetails";
 import { MyOrders } from "./MyOrders";
 import { Editaddress } from "./Editaddress";
 import { Forgotpage } from "./login/Forgotpage";
@@ -29,12 +28,13 @@ function App() {
   const [cartitem, setcartitem] = useState([]);
   const [price, setprice] = useState();
   const [quantity, setquantity] = useState();
-  console.log(cartitem, "app cartitem");
-  console.log(adddata, "from app");
+  const [navbarclr, setnavbarclr] = useState("hoe");
 
   return (
     <div className="App">
       <Navbar
+        navbarclr={navbarclr}
+        setnavbarclr={setnavbarclr}
         setprice={setprice}
         setcartitem={setcartitem}
         setadddata={setadddata}
@@ -45,6 +45,7 @@ function App() {
         role="alert"
       >
         <strong> IF You Faceing Some Error Please give A Feedback</strong>
+        <div>FeedBack Option Enable Soon!</div>
         <button
           type="button"
           className="btn-close"
@@ -88,6 +89,7 @@ function App() {
               price={price}
               quantity={quantity}
               cartitem={cartitem}
+              setcartitem={setcartitem}
             />
           }
         />
@@ -157,14 +159,7 @@ function App() {
             </ProtectedRoutEditProductPage>
           }
         />
-        <Route
-          path="/order/contact/:id"
-          element={
-            <ProtectedRoutAdminOrdersPage>
-              <OrderAndContactDetails />
-            </ProtectedRoutAdminOrdersPage>
-          }
-        />
+
         <Route
           path="/editaddress"
           element={
@@ -226,15 +221,6 @@ function ProtectedRoutEditProductPage({ children }) {
   );
 }
 function ProtectedRoutAdminProductPage({ children }) {
-  return localStorage.getItem("adtoken") ? (
-    <section className="text-white">
-      <div>{children}</div>
-    </section>
-  ) : (
-    <Navigate replace to="/" />
-  );
-}
-function ProtectedRoutAdminOrdersPage({ children }) {
   return localStorage.getItem("adtoken") ? (
     <section className="text-white">
       <div>{children}</div>

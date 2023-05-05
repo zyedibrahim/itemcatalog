@@ -98,7 +98,7 @@ export function CatagoriesPage() {
       <div className="row mb-4 mt-5 d-flex justify-content-center ">
         <div className="col-10 col-lg-4 col-md-5 ">
           <div>
-            <div className="input-group input-group-lg mb-3">
+            <div className="input-group input-w input-group-md mb-3">
               <span className="input-group-text" id="basic-addon1">
                 Search
               </span>

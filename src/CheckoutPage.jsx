@@ -16,7 +16,7 @@ const formvalidationschemaaddress = yup.object({
   phone: yup.number().required("Phone is required"),
 });
 
-export function CheckoutPage({ cartitem, quantity }) {
+export function CheckoutPage({ cartitem, setcartitem, quantity }) {
   const navigate = useNavigate();
   const [cprouduct, setcproduct] = useState([cartitem]);
 
@@ -90,218 +90,315 @@ export function CheckoutPage({ cartitem, quantity }) {
       buttonRef.current.click();
     }
   }, [showButton]);
+  const [orderpage, setorderpage] = useState(false);
 
-  return nxtpage === false ? (
-    <div className="text-white container">
-      <h1>checkout page</h1>
-      <div className="row d-flex justify-content-center ">
-        <div className="col-12  mb-3 col-md-3 col-lg-3">
-          <div className="d-grid mt-5">
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#staticBackdrop"
-            >
-              add address
-            </button>
+  const orderpagefun = () => {
+    navigate("/product");
+    setcartitem();
+    setTimeout(() => {
+      setorderpage(true);
+    }, 2000);
+  };
+
+  const date = new Date();
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  };
+  const dateTimeFormat = new Intl.DateTimeFormat("en-US", options);
+  const [
+    { value: weekday },
+    ,
+    { value: month },
+    ,
+    { value: day },
+    ,
+    { value: year },
+    ,
+    { value: hour },
+    ,
+    { value: minute },
+    ,
+    { value: second },
+    ,
+    { value: dayPeriod },
+  ] = dateTimeFormat.formatToParts(date);
+
+  return orderpage === false ? (
+    nxtpage === false ? (
+      <div className="text-white container">
+        <h1>checkout page</h1>
+        <div className="row d-flex justify-content-center ">
+          <div className="col-12  mb-3 col-md-3 col-lg-3">
+            <div className="d-grid mt-5">
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"
+              >
+                add address
+              </button>
+            </div>
+          </div>
+          <div className="col-12 mb-3 col-md-9 col-lg-9">
+            <Addadressfun
+              setcproduct={setcproduct}
+              address={address}
+              quantity={quantity}
+              qun
+              cprouduct={cprouduct}
+              setnxtpage={setnxtpage}
+              seteditdtstr={seteditdtstr}
+              orderpagefun={orderpagefun}
+              setorderpage={setorderpage}
+            />
           </div>
         </div>
-        <div className="col-12 mb-3 col-md-9 col-lg-9">
-          <Addadressfun
-            address={address}
-            quantity={quantity}
-            qun
-            cprouduct={cprouduct}
-            setnxtpage={setnxtpage}
-            seteditdtstr={seteditdtstr}
-          />
+        {/* address template */}
+        <div
+          className="modal fade"
+          id="staticBackdrop"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabIndex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog text-dark mt-d">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="staticBackdropLabel">
+                  Add New Address
+                </h1>
+                <button
+                  ref={buttonRef}
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={handleSubmit}>
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="mb-3">
+                        <input
+                          type="text"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="country"
+                          placeholder="Country"
+                          value={values.country}
+                          className="form-control mb-3"
+                          aria-label="form-select-lg example"
+                        />
+                        {/*  */}
+                        {touched.country && errors.country
+                          ? errors.country
+                          : ""}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-12 col-md-6">
+                      <div className="mb-3">
+                        <input
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="firstname"
+                          value={values.firstname}
+                          type="text"
+                          placeholder="First Name"
+                          className="form-control"
+                        />
+                        {errors.firstname && touched.firstname
+                          ? errors.firstname
+                          : ""}
+                      </div>
+                    </div>
+                    <div className="col-12 col-md-6">
+                      <div className="mb-3">
+                        <input
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="lastname"
+                          value={values.lastname}
+                          type="text"
+                          placeholder="Last Name"
+                          className="form-control"
+                        />
+                        {errors.lastname && touched.lastname
+                          ? errors.lastname
+                          : ""}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="mb-3">
+                        <textarea
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="address"
+                          value={values.address}
+                          placeholder="Address & arew and State"
+                          className="form-control"
+                          id="exampleFormControlTextarea1"
+                          rows="3"
+                        ></textarea>
+                        {errors.address && touched.address
+                          ? errors.address
+                          : ""}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-12 col-md-4">
+                      <div className="mb-3">
+                        <input
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="state"
+                          value={values.state}
+                          type="text"
+                          placeholder="State"
+                          className="form-control"
+                        />
+                      </div>
+                      {errors.state && touched.state ? errors.state : ""}
+                    </div>
+                    <div className="col-12 col-md-4">
+                      <div className="mb-3">
+                        <input
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="district"
+                          value={values.district}
+                          type="text"
+                          placeholder="District"
+                          className="form-control"
+                        />
+                      </div>
+                      {errors.district && touched.district
+                        ? errors.district
+                        : ""}
+                    </div>
+                    <div className="col-12 col-md-4">
+                      <div className="mb-3">
+                        <input
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="pincode"
+                          value={values.pincode}
+                          type="number"
+                          placeholder="Pincode"
+                          className="form-control"
+                        />
+                        {errors.pincode && touched.pincode
+                          ? errors.pincode
+                          : ""}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="mb-3"></div>
+                      <input
+                        type="number"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="phone"
+                        value={values.phone}
+                        placeholder="Phone Number"
+                        className="form-control"
+                      />
+                      {errors.phone && touched.phone ? errors.phone : ""}
+                    </div>
+                  </div>
+
+                  <div className="modal-footer">
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      data-bs-dismiss="add"
+                    >
+                      Add
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      data-bs-dismiss="modal"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      {/* address template */}
-      <div
-        className="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabIndex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog text-dark mt-d">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="staticBackdropLabel">
-                Add New Address
-              </h1>
-              <button
-                ref={buttonRef}
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <form onSubmit={handleSubmit}>
-                <div className="row">
-                  <div className="col-12">
-                    <div className="mb-3">
-                      <input
-                        type="text"
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name="country"
-                        placeholder="Country"
-                        value={values.country}
-                        className="form-control mb-3"
-                        aria-label="form-select-lg example"
-                      />
-                      {/*  */}
-                      {touched.country && errors.country ? errors.country : ""}
+    ) : editdtstr ? (
+      <Editadd editdtstr={editdtstr} setnxtpage={setnxtpage} />
+    ) : (
+      <h1>Loading...</h1>
+    )
+  ) : (
+    <div classname="container">
+      <div className="wrp">
+        <div className="row-con mt-3 mb-3 d-flex justify-content-center ">
+          <div className="col-10">
+            <div className="card text-center ">
+              <div className="card-body">
+                <div className="h1">
+                  <h1>Continue shoping ! </h1>
+                  <div className="h5 text-muted">Order Date</div>
+                  <div className="h4">
+                    <p>
+                      {weekday}, {month} {day}, {year}
+                    </p>
+                    <p>
+                      {hour}:{minute}:{second} {dayPeriod}
+                    </p>
+                  </div>
+                  <div className="card-title mb-3 mt-3">
+                    <i
+                      className="fa-solid fa-circle-check"
+                      style={{ color: "#47e159" }}
+                    ></i>
+                  </div>
+                  <div className="text-muted mt-3 mb-3">
+                    <div className="card-text h5 ">
+                      Track Id : {cprouduct[0]._id}
                     </div>
+                  </div>
+                  <div className="btn-con mb-3">
+                    <button
+                      onClick={() => orderpagefun()}
+                      className="btn btn-success"
+                    >
+                      Continue Shopping
+                      <i className="fa-solid ms-2 fa-arrow-right"></i>
+                    </button>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="col-12 col-md-6">
-                    <div className="mb-3">
-                      <input
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name="firstname"
-                        value={values.firstname}
-                        type="text"
-                        placeholder="First Name"
-                        className="form-control"
-                      />
-                      {errors.firstname && touched.firstname
-                        ? errors.firstname
-                        : ""}
-                    </div>
-                  </div>
-                  <div className="col-12 col-md-6">
-                    <div className="mb-3">
-                      <input
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name="lastname"
-                        value={values.lastname}
-                        type="text"
-                        placeholder="Last Name"
-                        className="form-control"
-                      />
-                      {errors.lastname && touched.lastname
-                        ? errors.lastname
-                        : ""}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-12">
-                    <div className="mb-3">
-                      <textarea
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name="address"
-                        value={values.address}
-                        placeholder="Address & arew and State"
-                        className="form-control"
-                        id="exampleFormControlTextarea1"
-                        rows="3"
-                      ></textarea>
-                      {errors.address && touched.address ? errors.address : ""}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-12 col-md-4">
-                    <div className="mb-3">
-                      <input
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name="state"
-                        value={values.state}
-                        type="text"
-                        placeholder="State"
-                        className="form-control"
-                      />
-                    </div>
-                    {errors.state && touched.state ? errors.state : ""}
-                  </div>
-                  <div className="col-12 col-md-4">
-                    <div className="mb-3">
-                      <input
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name="district"
-                        value={values.district}
-                        type="text"
-                        placeholder="District"
-                        className="form-control"
-                      />
-                    </div>
-                    {errors.district && touched.district ? errors.district : ""}
-                  </div>
-                  <div className="col-12 col-md-4">
-                    <div className="mb-3">
-                      <input
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name="pincode"
-                        value={values.pincode}
-                        type="number"
-                        placeholder="Pincode"
-                        className="form-control"
-                      />
-                      {errors.pincode && touched.pincode ? errors.pincode : ""}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-12">
-                    <div className="mb-3"></div>
-                    <input
-                      type="number"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="phone"
-                      value={values.phone}
-                      placeholder="Phone Number"
-                      className="form-control"
-                    />
-                    {errors.phone && touched.phone ? errors.phone : ""}
-                  </div>
-                </div>
-
-                <div className="modal-footer">
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    data-bs-dismiss="add"
-                  >
-                    Add
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    data-bs-dismiss="modal"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  ) : editdtstr ? (
-    <Editadd editdtstr={editdtstr} setnxtpage={setnxtpage} />
-  ) : (
-    <h1>Loading...</h1>
   );
 }
 
@@ -312,10 +409,13 @@ const formvalidationschemapay = yup.object({
 
 function Addadressfun({
   cprouduct,
+  setcartitem,
   quantity,
   address,
   setnxtpage,
   seteditdtstr,
+  orderpagefun,
+  setorderpage,
 }) {
   const price = [...cprouduct];
   const totalPri = cprouduct.reduce(
@@ -324,7 +424,6 @@ function Addadressfun({
   );
 
   const navigate = useNavigate();
-
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
@@ -361,7 +460,7 @@ function Addadressfun({
     const temp = await jsondata.status;
 
     if (temp === "200 ok") {
-      window.location.href = "/product";
+      setorderpage(true);
     }
   };
 

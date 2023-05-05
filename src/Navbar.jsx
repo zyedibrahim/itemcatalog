@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
+export function Navbar({
+  adddata,
+  setcartitem,
+  setprice,
+  setadddata,
+  navbarclr,
+  setnavbarclr,
+}) {
   const navigate = useNavigate();
-
-  // const price = [...adddata];
-  // console.log(price, "From adddata Price");
-
-  // const [amount, setamount] = useState(
-  //   adddata?.map((ele) => Number(ele.price) || 0)
-  // );
-  // console.log(amount, "from adddata Amount");
-  // useEffect(() => {
-  //   adddata?.map((ele) => ele.price);
-  // }, [adddata]);
 
   const [products, setProducts] = useState(adddata);
   useEffect(() => {
@@ -51,9 +47,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
       setprice(totalPrice);
       console.log(data, "form logichek");
 
-      setTimeout(() => {
-        navigate("/checkoutpage");
-      }, 2000);
+      navigate("/checkoutpage");
     } else {
       window.location.href = "/login";
     }
@@ -77,19 +71,22 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg text-dark bg-success">
+      <nav className="navbar navbar-expand-lg bg-success">
         <div className="container">
           <Link className="nav-font navbar-brand text-white" href="#">
             <i className="icon-shop me-2  fas fa-shopping-basket"></i>
             Go-kart
           </Link>
 
-          <div className="collapse  navbar-collapse" id="navbarNavDropdown">
+          <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="ms-5 navbar-nav gap-2">
-              {localStorage.getItem("token") ? (
+              {!localStorage.getItem("adtoken") ? (
                 <li className="nav-item ">
                   <Link
-                    className="nav-link clr-org active text-white "
+                    onClick={() => setnavbarclr("home")}
+                    className={`nav-link ${
+                      navbarclr === "home" ? "clr-org" : "text-white"
+                    } `}
                     aria-current="page"
                     to="/home"
                   >
@@ -101,9 +98,15 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 ""
               )}
 
-              {localStorage.getItem("token") ? (
+              {!localStorage.getItem("adtoken") ? (
                 <li className="nav-item ">
-                  <Link className="nav-link text-white" to="/product">
+                  <Link
+                    onClick={() => setnavbarclr("products")}
+                    className={`nav-link ${
+                      navbarclr === "products" ? "clr-org" : "text-white"
+                    } `}
+                    to="/product"
+                  >
                     <i className="me-2 fa-solid fa-bars"></i>
                     Products
                   </Link>
@@ -114,7 +117,13 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
 
               {localStorage.getItem("token") ? (
                 <li className="nav-item">
-                  <Link className="nav-link text-white" to="/myorders">
+                  <Link
+                    onClick={() => setnavbarclr("myorders")}
+                    className={`nav-link ${
+                      navbarclr === "myorders" ? "clr-org" : "text-white"
+                    } `}
+                    to="/myorders"
+                  >
                     <i className="me-2 fa-solid fa-bag-shopping"></i>
                     MYOrder
                   </Link>
@@ -126,7 +135,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
               {localStorage.getItem("adtoken") ? (
                 <li className="nav-item ">
                   <Link
-                    className="nav-link clr-org active text-white "
+                    onClick={() => setnavbarclr("dashboard")}
+                    className={`nav-link ${
+                      navbarclr === "dashboard" ? "clr-org" : "text-white"
+                    } `}
                     aria-current="page"
                     to="/dashboard"
                   >
@@ -143,7 +155,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
               {localStorage.getItem("adtoken") ? (
                 <li className="nav-item ">
                   <Link
-                    className="nav-link clr-org active text-white "
+                    onClick={() => setnavbarclr("products")}
+                    className={`nav-link ${
+                      navbarclr === "products" ? "clr-org" : "text-white"
+                    } `}
                     aria-current="page"
                     to="/adminproducts"
                   >
@@ -160,7 +175,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
               {localStorage.getItem("adtoken") ? (
                 <li className="nav-item ">
                   <Link
-                    className="nav-link clr-org active text-white "
+                    onClick={() => setnavbarclr("catagories")}
+                    className={`nav-link ${
+                      navbarclr === "catagories" ? "clr-org" : "text-white"
+                    } `}
                     aria-current="page"
                     to="/admincatagories"
                   >
@@ -177,7 +195,10 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
               {localStorage.getItem("adtoken") ? (
                 <li className="nav-item ">
                   <Link
-                    className="nav-link clr-org active text-white "
+                    onClick={() => setnavbarclr("users")}
+                    className={`nav-link ${
+                      navbarclr === "users" ? "clr-org" : "text-white"
+                    } `}
                     aria-current="page"
                     to="/adminpageusers"
                   >
@@ -194,19 +215,26 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
             </ul>
           </div>
 
-          <div className="d-flex justify-content-center gap-2">
-            <li className="nav-item">
-              <button
-                className="btn  btn-nav  cart "
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight"
-              >
-                <i className=" fa-solid fa-cart-shopping"></i>{" "}
-                {products.length === 0 ? "" : adddata.length}
-              </button>
-            </li>
+          <div className="d-flex  justify-content-center gap-2">
+            {!localStorage.getItem("adtoken") ? (
+              <li className="nav-item">
+                <button
+                  className={`btn 
+                    cart
+                   `}
+                  type="button"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#offcanvasRight"
+                  aria-controls="offcanvasRight"
+                >
+                  <i className=" fa-solid fa-cart-shopping"></i>{" "}
+                  {products.length === 0 ? "" : adddata.length}
+                </button>
+              </li>
+            ) : (
+              ""
+            )}
+
             {localStorage.getItem("token") ||
             localStorage.getItem("adtoken") ? (
               <li className="nav-item">
@@ -218,7 +246,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                   className="btn btn-nav cart"
                 >
                   <i
-                    className="fa-solid fa-right-to-bracket"
+                    className="fa-solid log-icon fa-right-to-bracket"
                     style={{ color: "white" }}
                   ></i>
                 </button>
@@ -228,7 +256,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
                 <button className="btn btn-nav cart">
                   <Link className="nav-link text-white" to="/login">
                     <i
-                      className="fa-solid fa-right-to-bracket"
+                      className="fa-solid log-icon fa-right-to-bracket"
                       style={{ color: "black" }}
                     ></i>
                   </Link>
@@ -238,8 +266,8 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
             {localStorage.getItem("token") ||
             localStorage.getItem("adtoken") ? (
               <li className="nav-item">
-                <button className="btn btn-nav cart">
-                  <Link className="nav-link text-white" to="/myprofile">
+                <button className="btn cart">
+                  <Link className={`nav-link text-white`} to="/myprofile">
                     <i className="fa-solid fa-user"></i>
                   </Link>
                 </button>
@@ -358,6 +386,7 @@ export function Navbar({ adddata, setcartitem, setprice, setadddata }) {
           <div className="mb-3">
             {products?.length > 0 ? (
               <button
+                data-bs-dismiss="offcanvas"
                 onClick={() => {
                   logincheck(products);
                 }}

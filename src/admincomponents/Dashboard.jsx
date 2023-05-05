@@ -94,7 +94,7 @@ export function Dashboard() {
       </div>
 
       <div className="mt-3 mb-3">
-        <div className="input-group w-50 input-group-lg mb-3">
+        <div className="input-group input-w  input-group-md mb-3">
           <span className="input-group-text" id="basic-addon1">
             Search
           </span>
