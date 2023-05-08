@@ -37,9 +37,11 @@ export function OtpVerify() {
       .then((data) => data.json())
       .then((data) => {
         if (data.status === "200 ok") {
-          notifysuccess("Your Account is Acctivated");
           localStorage.removeItem("otpverfyroute");
-          navigate("/home");
+          notifysuccess("Your Account is Acctivated");
+          setTimeout(() => {
+            navigate("/home");
+          }, 3000);
         } else {
           notifyfail(data.status);
         }
