@@ -194,7 +194,7 @@ export function Login() {
 
                   <div className="text-center">
                     <p>
-                      Not a member? <a href="/signup">Register</a>
+                      Not a member? <Link to="/createuser">Register</Link>
                     </p>
                   </div>
                 </div>

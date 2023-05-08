@@ -75,10 +75,13 @@ export function Forgotpage() {
                   </button>
                   <ToastContainer />
                   <div className="d-flex justify-content-between">
-                    <Link to="/" className="mt-1 text-decoration-none">
+                    <Link to="/login" className="mt-1 text-decoration-none">
                       Login
                     </Link>
-                    <Link to="/signup" className="mt-1 text-decoration-none">
+                    <Link
+                      to="/createuser"
+                      className="mt-1 text-decoration-none"
+                    >
                       Signup
                     </Link>
                   </div>
