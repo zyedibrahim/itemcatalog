@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { FeedBack } from "./FeedBack";
+
 export function Navbar({
   adddata,
   setcartitem,

@@ -222,59 +222,6 @@ export function Product({ setadddata, adddata }) {
                     );
                   })}
           </div>
-
-          {/* <div className="row-con">
-            {datafrmapi
-              .filter((item) => {
-                return searchquery.toLowerCase() === ""
-                  ? item
-                  : item.name.toLowerCase().includes(searchquery);
-              })
-              .map((ele, index) => {
-                return (
-                  <div key={ele._id} className="col-con">
-                    {ele.catagories ? (
-                      <div className="col-con-1">
-                        <div className="img-con-outside">
-                          <img
-                            className="img-con"
-                            src={ele.img_pro}
-                            alt={ele.img_pro}
-                          />
-                        </div>
-                        <div className="pro-name">{ele.name}</div>
-                        <div className="amout-pro">
-                          {ele.price}
-                          <span className="quantity">{ele.quantity}</span>
-                        </div>
-
-                        <div className="stock">{ele.stock}</div>
-
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => {
-                            setcount1(count1 + 1);
-                            {
-                              count1 >= 1 ? "" : setadddata([...adddata, ele]);
-                            }
-                          }}
-                        >
-                          addcart{count1}
-                        </button>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => navigate(`/products/${ele._id}`)}
-                        >
-                          Buy Now
-                        </button>
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                );
-              })}
-          </div> */}
         </div>
       </main>
     </section>

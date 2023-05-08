@@ -22,6 +22,7 @@ import { MyOrders } from "./MyOrders";
 import { Editaddress } from "./Editaddress";
 import { Forgotpage } from "./login/Forgotpage";
 import { ConfirmPassword } from "./login/ConfirmPassword";
+import { FeedBack } from "./FeedBack";
 
 function App() {
   const [adddata, setadddata] = useState([]);
@@ -53,6 +54,8 @@ function App() {
           aria-label="Close"
         ></button>
       </div>
+
+      <FeedBack />
 
       <Routes>
         <Route path="*" element={<Home />} />
