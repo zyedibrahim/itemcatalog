@@ -65,7 +65,7 @@ export function Createuser() {
   const [check, setcheck] = useState("false");
 
   return (
-    <div>
+    <div className="container">
       <div className=" row d-flex justify-content-center">
         <div className="cen shadow-lg col-11 col-md-6 col-lg-4 col-xl-4 card mt-5">
           <form className="card-body" onSubmit={handleSubmit}>

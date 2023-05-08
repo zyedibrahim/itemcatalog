@@ -39,7 +39,6 @@ function App() {
         setcartitem={setcartitem}
         setadddata={setadddata}
         adddata={adddata}
-      
       />
       <div
         className="alert alert-warning alert-dismissible fade show"
@@ -56,10 +55,10 @@ function App() {
       </div>
 
       <Routes>
+        <Route path="*" element={<Home />} />
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/forgotpage" element={<Forgotpage />} />
-        <Route path="/ex" element={<MySelect />} />
         <Route
           path="/product"
           element={<Product adddata={adddata} setadddata={setadddata} />}
