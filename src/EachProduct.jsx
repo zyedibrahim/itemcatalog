@@ -14,14 +14,13 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
         console.log(err);
       });
   };
-  console.log(eachdata, "from eachdata");
+ 
   useEffect(() => {
     getdata();
   }, []);
 
   const copydata = [...eachdata];
-  console.log(copydata[0]?.price, "form data");
-
+ 
   const handleIncrement = (index) => {
     const newProducts = [...eachdata];
     newProducts[index].quantity += 1;

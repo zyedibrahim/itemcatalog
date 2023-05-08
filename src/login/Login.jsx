@@ -31,12 +31,12 @@ export function Login() {
     });
   const navigate = useNavigate();
 
-  setInterval(() => {
-    if (!localStorage.getItem("token") || !localStorage.getItem("adtoken")) {
-      window.location.href = "/home";
-    }
-    console.log("happens");
-  }, 200000);
+  // setInterval(() => {
+  //   if (!localStorage.getItem("token") || !localStorage.getItem("adtoken")) {
+  //     window.location.href = "/home";
+  //   }
+  //   console.log("happens");
+  // }, 200000);
 
   const login = async (data) => {
     const dataf = await fetch(`${API}/login`, {

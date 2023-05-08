@@ -7,7 +7,6 @@ export function AdminuserPageUsers() {
   const [alldata, setalldata] = useState();
   const [nxtpage, setnxtpage] = useState(false);
   const [orderdata, setorderdata] = useState();
-  console.log(orderdata?.address, "form outside");
   const getdata = async () => {
     await fetch(`${API}/alluser/accounts`, {
       method: "GET",
@@ -47,8 +46,6 @@ export function AdminuserPageUsers() {
           .then((data) => data.json())
           .then((data) => setalldataorder(data, "order adimign"))
           .catch((err) => console.log(err));
-
-        console.log("fetched");
       } catch (err) {
         console.log(err);
       }
@@ -60,8 +57,6 @@ export function AdminuserPageUsers() {
 
   const [searchquery, setsearchquery] = useState("");
   const handlechangeserach = (e) => {
-    console.log(alldata);
-
     setsearchquery(e.target.value);
   };
 

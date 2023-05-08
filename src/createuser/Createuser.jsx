@@ -55,9 +55,8 @@ export function Createuser() {
     if (status === "200 ok") {
       notifysuccess("OTP Sent On Register Email Address");
       localStorage.setItem("otpverfyroute", otpverfyroute);
-      setTimeout(() => {
-        navigate("/otpverify");
-      }, 2000);
+
+      navigate("/otpverify");
     } else {
       notifyfail(status);
     }

@@ -8,8 +8,6 @@ export function MySelect() {
     event.preventDefault();
     setTodos([...todos, newTodo]);
     setNewTodo("");
-    console.log(todos, "todos");
-    console.log(newTodo, "newtodos");
   };
 
   // const handleDelete = (index) => {

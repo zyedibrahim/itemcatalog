@@ -32,7 +32,7 @@ export function Navbar({
     }
   };
 
-  const totalPri = products.reduce(
+  const totalPri = products?.reduce(
     (total, product) => total + product.price,
     0
   );
@@ -45,15 +45,12 @@ export function Navbar({
         0
       );
       setprice(totalPrice);
-      console.log(data, "form logichek");
 
       navigate("/checkoutpage");
     } else {
       window.location.href = "/login";
     }
   };
-
-  const [user, setuser] = useState("false");
 
   const filterdel = (data, index) => {
     const dataddd = products?.filter((ele) => ele._id !== data._id);
@@ -62,8 +59,6 @@ export function Navbar({
       (ele) => ele._id !== data._id,
       (data.price = 0)
     );
-    //npm
-    console.log(data.price, "price");
 
     setProducts(dataddd);
     setadddata(dataad);

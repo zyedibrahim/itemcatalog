@@ -39,7 +39,6 @@ export function CatagoriesPage() {
     },
     validationSchema: formvalidationschema,
     onSubmit: (data) => {
-      console.log(data);
       postcatagorie(data);
     },
   });
@@ -89,7 +88,6 @@ export function CatagoriesPage() {
   const [searchquery, setsearchquery] = useState("");
 
   const handlechangeserach = (e) => {
-    console.log(apidata);
     setsearchquery(e.target.value);
   };
 

@@ -63,7 +63,6 @@ function UpdateCatagories({ eachdata }) {
 
     if (temp === "200 ok") {
       navigate("/admincatagories");
-      console.log("navigate to admincatagories");
     }
   };
 

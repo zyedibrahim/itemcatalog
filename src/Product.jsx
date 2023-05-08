@@ -41,7 +41,7 @@ export function Product({ setadddata, adddata }) {
     setsearchquery(event.target.value);
     setSsearch(false);
   };
-  console.log(datafrmapi);
+
   return (
     <section>
       <main>

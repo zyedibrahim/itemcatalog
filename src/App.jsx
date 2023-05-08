@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -28,7 +28,7 @@ function App() {
   const [cartitem, setcartitem] = useState([]);
   const [price, setprice] = useState();
   const [quantity, setquantity] = useState();
-  const [navbarclr, setnavbarclr] = useState("hoe");
+  const [navbarclr, setnavbarclr] = useState("home");
 
   return (
     <div className="App">
@@ -39,6 +39,7 @@ function App() {
         setcartitem={setcartitem}
         setadddata={setadddata}
         adddata={adddata}
+      
       />
       <div
         className="alert alert-warning alert-dismissible fade show"

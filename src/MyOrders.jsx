@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
 import { API } from "./data";
-import { date } from "yup";
+
 export function MyOrders() {
   const [alldata, setalldata] = useState([]);
-  const adddress = alldata?.newdata;
-  let datestore = "";
-  const datedel = alldata?.newdata;
-
-  datestore = datedel;
-  console.log(datestore, "datasore");
-
-  console.log(datedel, "date");
 
   const getdata = async () => {
     await fetch(`${API}/alluser/accounts/${localStorage.getItem("_id")}`, {
@@ -26,8 +18,6 @@ export function MyOrders() {
   useEffect(() => {
     getdata();
   }, []);
-
-  console.log(alldata, "outside");
 
   return (
     <div className="text-white container ">

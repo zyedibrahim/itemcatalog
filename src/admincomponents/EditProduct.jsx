@@ -31,7 +31,6 @@ export function EditProduct() {
   );
 }
 function UpdateProduct({ eachdata }) {
-  console.log(eachdata.catagories, "update data");
   const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
     useFormik({
       initialValues: {
@@ -233,7 +232,7 @@ function UpdateProduct({ eachdata }) {
 
                 <div className="modal-footer">
                   <button type="submit" className="btn btn-success">
-                    Add
+                    Update
                   </button>
                   <button
                     type="button"

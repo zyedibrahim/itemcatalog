@@ -17,7 +17,7 @@ const formvalidationschemaaddress = yup.object({
   phone: yup.number().required("Phone is required"),
 });
 
-export function CheckoutPage({ cartitem, setcartitem, quantity }) {
+export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
   const navigate = useNavigate();
   const [cprouduct, setcproduct] = useState([cartitem]);
 
@@ -62,7 +62,6 @@ export function CheckoutPage({ cartitem, setcartitem, quantity }) {
       },
       validationSchema: formvalidationschemaaddress,
       onSubmit: (data) => {
-        console.log(data);
         storeaddressindb(data);
       },
     });
@@ -94,8 +93,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity }) {
   const [orderpage, setorderpage] = useState(false);
 
   const orderpagefun = () => {
-    navigate("/product");
-    setcartitem();
+    window.location.href = "/product";
     setTimeout(() => {
       setorderpage(true);
     }, 2000);
@@ -419,7 +417,6 @@ function Addadressfun({
   setcartitem,
   quantity,
   address,
-  setaddress,
   setnxtpage,
   seteditdtstr,
   setorderpage,
@@ -452,12 +449,7 @@ function Addadressfun({
       },
     });
 
-  const outside = address;
-
-  console.log(outside, "outside");
-
   const putorderdata = async (data) => {
-    console.log(data.product[0]._id);
     const fetchapi = await fetch(
       `${API}/alluser/accounts/${data.product[0]._id} `,
       {
@@ -478,7 +470,7 @@ function Addadressfun({
   };
 
   const delefun = (data, index) => {
-    // console.log(data, "deldaata");
+   
     delefu(data.id);
   };
 
@@ -502,8 +494,6 @@ function Addadressfun({
       getdata();
     }
   }
-
-  console.log(address, "out address filete");
 
   function editfun(data) {
     setnxtpage(true);

@@ -29,7 +29,6 @@ export function AdminuserProduct() {
       },
       validationSchema: formvalidationschema,
       onSubmit: (data) => {
-        console.log(data);
         addproduct(data);
       },
     });
@@ -72,7 +71,7 @@ export function AdminuserProduct() {
       },
     });
     const jsondata = await dataf.json();
-    console.log(jsondata);
+
     if (jsondata.status === "200 ok") {
       getdata();
     } else {
