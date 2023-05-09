@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { API } from "../data";
 
 import * as yup from "yup";
@@ -15,23 +15,30 @@ export const formvalidationschema = yup.object({
 });
 
 export function AdminuserProduct() {
-  const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
-    useFormik({
-      initialValues: {
-        catagories: "",
-        name: "",
-        price: "",
-        quantity: 1,
-        stock: "",
-        q_type: "",
-        img_pro: "",
-        sold: 0,
-      },
-      validationSchema: formvalidationschema,
-      onSubmit: (data) => {
-        addproduct(data);
-      },
-    });
+  const {
+    values,
+    handleSubmit,
+    touched,
+    resetForm,
+    handleBlur,
+    errors,
+    handleChange,
+  } = useFormik({
+    initialValues: {
+      catagories: "",
+      name: "",
+      price: "",
+      quantity: 1,
+      stock: "",
+      q_type: "",
+      img_pro: "",
+      sold: 0,
+    },
+    validationSchema: formvalidationschema,
+    onSubmit: (data) => {
+      addproduct(data);
+    },
+  });
 
   const [alldata, setalldata] = useState([]);
 
@@ -73,6 +80,8 @@ export function AdminuserProduct() {
     const jsondata = await dataf.json();
 
     if (jsondata.status === "200 ok") {
+      setShowButton(true);
+      resetForm();
       getdata();
     } else {
       console.log("something went wrong");
@@ -94,9 +103,18 @@ export function AdminuserProduct() {
   const [searchquery, setsearchquery] = useState("");
 
   const handlechangeserach = (e) => {
-    console.log(alldata);
     setsearchquery(e.target.value);
   };
+
+  const [showButton, setShowButton] = useState(false);
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    if (showButton === true) {
+      buttonRef.current.click();
+      setShowButton(false);
+    }
+  }, [showButton]);
 
   return (
     <div className="container">
@@ -196,49 +214,6 @@ export function AdminuserProduct() {
                 ) : (
                   <h1>NO data found </h1>
                 )}
-
-                {/* {alldata
-                  ? alldata.map((ele, index) => {
-                      return (
-                        <tr key={ele._id} className="text-center">
-                          <th scope="row">{index + 1}</th>
-                          <td>{ele.catagories}</td>
-                          <td>{ele.name}</td>
-                          <td>{ele.q_type}</td>
-                          <td>{ele.price}</td>
-                          <td>{ele.stock}</td>
-                          <td>
-                            <div className=" img-con-ad">
-                              <img
-                                src={ele.img_pro}
-                                alt={ele.catagories}
-                                className="img-ad"
-                              />
-                            </div>
-                          </td>
-                          <td>
-                            <div className="btn-con d-flex justify-content-center gap-3">
-                              <button
-                                onClick={() =>
-                                  navigate(`/edit/product/${ele._id}`)
-                                }
-                                className="btn btn-warning"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => deletefunc(ele._id)}
-                                type="button"
-                                className="btn btn-danger"
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : ""} */}
               </tbody>
             </table>
           </div>
@@ -261,7 +236,7 @@ export function AdminuserProduct() {
                 Add Product
               </h1>
               <button
-                // ref={buttonRef}
+                ref={buttonRef}
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
@@ -407,11 +382,7 @@ export function AdminuserProduct() {
                 </div>
 
                 <div className="modal-footer">
-                  <button
-                    type="submit"
-                    className="btn btn-success"
-                    data-bs-dismiss="modal"
-                  >
+                  <button type="submit" className="btn btn-success">
                     Add
                   </button>
                   <button

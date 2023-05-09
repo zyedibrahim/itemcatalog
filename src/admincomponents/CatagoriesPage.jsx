@@ -169,37 +169,6 @@ export function CatagoriesPage() {
                 ) : (
                   <h1>NO data FOUND</h1>
                 )}
-
-                {/* {apidata ? (
-                  apidata?.map((ele, index) => {
-                    return (
-                      <tr key={ele._id} className="text-center">
-                        <th scope="row">{index + 1}</th>
-                        <td>{ele.catagories}</td>
-                        <td>
-                          <div className="btn-con d-flex justify-content-center gap-3">
-                            <button
-                              onClick={() =>
-                                navigate(`/edit/catagories/${ele._id}`)
-                              }
-                              className="btn btn-warning"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => deletefun(ele._id)}
-                              className="btn btn-danger"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                ) : (
-                  <h1>NO data FOUND</h1>
-                )} */}
               </tbody>
             </table>
           </div>

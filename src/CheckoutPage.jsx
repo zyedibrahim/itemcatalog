@@ -40,31 +40,32 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
     setcproduct(cartitem);
   }, [cartitem]);
 
-  function generateRandomNumber() {
-    return Math.floor(Math.random() * 9000) + 1000;
-  }
-
   const [nxtpage, setnxtpage] = useState(false);
 
-  const randomNumber = generateRandomNumber();
-  const { values, handleSubmit, touched, handleBlur, errors, handleChange } =
-    useFormik({
-      initialValues: {
-        id: randomNumber,
-        country: "",
-        firstname: "",
-        lastname: "",
-        address: "",
-        state: "",
-        district: "",
-        pincode: "",
-        phone: "",
-      },
-      validationSchema: formvalidationschemaaddress,
-      onSubmit: (data) => {
-        storeaddressindb(data);
-      },
-    });
+  const {
+    values,
+    handleSubmit,
+    touched,
+    resetForm,
+    handleBlur,
+    errors,
+    handleChange,
+  } = useFormik({
+    initialValues: {
+      country: "",
+      firstname: "",
+      lastname: "",
+      address: "",
+      state: "",
+      district: "",
+      pincode: "",
+      phone: "",
+    },
+    validationSchema: formvalidationschemaaddress,
+    onSubmit: (data) => {
+      storeaddressindb(data);
+    },
+  });
   const [showButton, setShowButton] = useState(false);
   const buttonRef = useRef(null);
 
@@ -82,12 +83,14 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
     if (jsondata.status === "200 ok") {
       setShowButton(true);
       getdata();
+      resetForm();
     }
   };
 
   useEffect(() => {
     if (showButton) {
       buttonRef.current.click();
+      setShowButton(false);
     }
   }, [showButton]);
   const [orderpage, setorderpage] = useState(false);
@@ -142,7 +145,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"
               >
-                add address
+                Add Address
               </button>
             </div>
           </div>
@@ -360,7 +363,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
       <h1>Loading...</h1>
     )
   ) : (
-    <div classname="container">
+    <div className="container">
       <div className="wrp">
         <div className="row-con mt-3 mb-3 d-flex justify-content-center ">
           <div className="col-10">
@@ -414,7 +417,6 @@ const formvalidationschemapay = yup.object({
 
 function Addadressfun({
   cprouduct,
-  setcartitem,
   quantity,
   address,
   setnxtpage,
@@ -470,7 +472,6 @@ function Addadressfun({
   };
 
   const delefun = (data, index) => {
-   
     delefu(data.id);
   };
 

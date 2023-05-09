@@ -146,24 +146,6 @@ export function Dashboard() {
                 <td>There is no Data</td>
               </tr>
             )}
-
-            {/* {apidata ? (
-              apidata?.map((ele, index) => {
-                return (
-                  <tr key={ele._id} className="text-center">
-                    <th scope="row">{index + 1}</th>
-                    <td>{ele.name}</td>
-                    <td>{ele.stock}</td>
-                    <td>{ele.sold}</td>
-                    <td style={{ color: ele.stock > 0 ? "" : "red" }}>
-                      {ele.stock > 0 ? ele.stock : "Out of Stock"}
-                    </td>
-                  </tr>
-                );
-              })
-            ) : (
-              <h1>NO data FOUND</h1>
-            )} */}
           </tbody>
         </table>
       </div>
