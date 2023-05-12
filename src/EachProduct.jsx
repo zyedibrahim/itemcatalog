@@ -14,13 +14,13 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
         console.log(err);
       });
   };
- 
+
   useEffect(() => {
     getdata();
   }, []);
 
   const copydata = [...eachdata];
- 
+
   const handleIncrement = (index) => {
     const newProducts = [...eachdata];
     newProducts[index].quantity += 1;
@@ -42,6 +42,8 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
 
   const logincheck = (perdata) => {
     if (localStorage.getItem("token")) {
+      const jsonString = JSON.stringify([perdata]);
+      localStorage.setItem("cartitem", jsonString);
       setcartitem([perdata]);
       navigate("/checkoutpage");
     } else {

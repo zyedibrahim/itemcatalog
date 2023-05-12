@@ -151,15 +151,11 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
           </div>
           <div className="col-12 mb-3 col-md-9 col-lg-9">
             <Addadressfun
-              setcproduct={setcproduct}
               address={address}
-              setaddress={setaddress}
               quantity={quantity}
               qun
-              cprouduct={cprouduct}
               setnxtpage={setnxtpage}
               seteditdtstr={seteditdtstr}
-              orderpagefun={orderpagefun}
               setorderpage={setorderpage}
               getdata={getdata}
             />
@@ -388,7 +384,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
                   </div>
                   <div className="text-muted mt-3 mb-3">
                     <div className="card-text h5 ">
-                      Track Id : {cprouduct[0]._id}
+                      Track Id :{cprouduct[0]?._id}
                     </div>
                   </div>
                   <div className="btn-con mb-3">
@@ -416,7 +412,7 @@ const formvalidationschemapay = yup.object({
 });
 
 function Addadressfun({
-  cprouduct,
+  // cprouduct,
   quantity,
   address,
   setnxtpage,
@@ -424,11 +420,17 @@ function Addadressfun({
   setorderpage,
   getdata,
 }) {
+  const localstoragedata = localStorage.getItem("cartitem");
+  const items = JSON.parse(localstoragedata) || [];
+  // data form local storage cartitem
+  const [cprouduct, setcproduct] = useState(items);
   const price = [...cprouduct];
-  const totalPri = cprouduct.reduce(
-    (total, product) => total + product.price,
+
+  const totalPri = cprouduct?.reduce(
+    (total, product) => total + product?.price,
     0
   );
+
   const notifysuccess = (data) => toast.success(data);
   const notifyfail = (data) => toast.error(data);
   const navigate = useNavigate();
@@ -468,6 +470,7 @@ function Addadressfun({
 
     if (temp === "200 ok") {
       setorderpage(true);
+      localStorage.removeItem("cartitem");
     }
   };
 
@@ -591,33 +594,37 @@ function Addadressfun({
             </div>
 
             <div className="place-ordercon">
-              {cprouduct?.map((ele, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="con-2-inside d-flex justify-content-between"
-                  >
-                    <div className="middle-con d-flex">
-                      <div className="img-cont ">
-                        <img
-                          className="checkout-img"
-                          src={ele.img_pro}
-                          alt={ele.name}
-                        />
-                      </div>
-                      <div className="cont-body">
-                        {ele.name}
-                        <div className="quantity">
-                          Qty : {quantity} {ele.quantity} /
-                          <span className="me-2">{ele.q_type}</span>
+              {cprouduct ? (
+                cprouduct?.map((ele, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="con-2-inside d-flex justify-content-between"
+                    >
+                      <div className="middle-con d-flex">
+                        <div className="img-cont ">
+                          <img
+                            className="checkout-img"
+                            src={ele.img_pro}
+                            alt={ele.name}
+                          />
+                        </div>
+                        <div className="cont-body">
+                          {ele.name}
+                          <div className="quantity">
+                            Qty : {quantity} {ele.quantity} /
+                            <span className="me-2">{ele.q_type}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <h1>Loading</h1>
+              )}
               <div className="amount-con fs-5">
-                Amount : Rs - : {price[0].price}{" "}
+                Amount : Rs - : {price[0]?.price}{" "}
               </div>
 
               <div className="fs-5 delivery-charge mt-4 d-flex justify-content-end ">

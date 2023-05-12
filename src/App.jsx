@@ -31,6 +31,7 @@ function App() {
   const [quantity, setquantity] = useState();
   const [navbarclr, setnavbarclr] = useState("home");
 
+
   return (
     <div className="App">
       <Navbar
@@ -46,7 +47,7 @@ function App() {
         role="alert"
       >
         <strong> IF You Faceing Some Error Please give A Feedback</strong>
-        <div>FeedBack Option Enable Soon!</div>
+
         <button
           type="button"
           className="btn-close"
@@ -64,7 +65,12 @@ function App() {
         <Route path="/forgotpage" element={<Forgotpage />} />
         <Route
           path="/product"
-          element={<Product adddata={adddata} setadddata={setadddata} />}
+          element={
+            <Product
+              adddata={adddata}
+              setadddata={setadddata}
+            />
+          }
         />
 
         <Route

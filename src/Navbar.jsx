@@ -18,19 +18,26 @@ export function Navbar({
     setProducts(adddata);
   }, [adddata]);
 
-  const handleIncrement = (index) => {
-    const newProducts = [...products];
-    newProducts[index].quantity += 1;
-    newProducts[index].price = newProducts[index].price + 200;
-    setProducts(newProducts);
+  const handleIncrement = (data) => {
+    const filterdata = adddata.findIndex((ele) => ele._id === data._id);
+    const newProducts = [...adddata];
+    const newProductsprice = [...adddata];
+
+    newProducts[filterdata].quantity += 1;
+    newProducts[filterdata].price =
+      newProducts[filterdata].price + newProductsprice[filterdata].price;
+
+    setadddata(newProducts);
   };
 
-  const handleDecrement = (index) => {
-    const newProducts = [...products];
-    if (newProducts[index].quantity > 1) {
-      newProducts[index].quantity -= 1;
-      newProducts[index].price = newProducts[index].price - 200;
-      setProducts(newProducts);
+  const handleDecrement = (data) => {
+    const filterdata = adddata.findIndex((ele) => ele._id === data._id);
+    const newProducts = [...adddata];
+    const newProductsprice = [...adddata];
+    if (newProducts[filterdata].quantity > 1) {
+      newProducts[filterdata].quantity -= 1;
+      newProducts[filterdata].price = newProducts[filterdata].price - 200;
+      setadddata(newProducts);
     }
   };
 
@@ -41,6 +48,8 @@ export function Navbar({
 
   const logincheck = (data) => {
     if (localStorage.getItem("token")) {
+      const jsonString = JSON.stringify(data);
+      localStorage.setItem("cartitem", jsonString);
       setcartitem(data);
       const totalPrice = data.reduce(
         (total, product) => total + product.price,
@@ -319,8 +328,8 @@ export function Navbar({
         </div>
         <div className="offcanvas-body mb-3">
           <div className="mb-3">
-            {products?.length > 0 ? (
-              products?.map((ele, index) => {
+            {adddata?.length > 0 ? (
+              adddata?.map((ele, index) => {
                 return (
                   <div key={ele._id}>
                     <div className="card mb-3">
@@ -339,15 +348,11 @@ export function Navbar({
                               <div className="mt-2 d-flex justify-content-between">
                                 <div className="btn-con">
                                   {" "}
-                                  <button
-                                    onClick={() => handleDecrement(index)}
-                                  >
+                                  <button onClick={() => handleDecrement(ele)}>
                                     -
                                   </button>{" "}
                                   {ele.quantity}
-                                  <button
-                                    onClick={() => handleIncrement(index)}
-                                  >
+                                  <button onClick={() => handleIncrement(ele)}>
                                     +
                                   </button>{" "}
                                 </div>
@@ -383,7 +388,7 @@ export function Navbar({
               <h1 className="text-muted"> Cart is Empty </h1>
             )}
           </div>
-          {products?.length ? (
+          {adddata?.length ? (
             <div className="d-flex justify-content-end">
               <div> Total Rs:- {totalPri}</div>
             </div>
@@ -392,7 +397,7 @@ export function Navbar({
           )}
 
           <div className="mb-3">
-            {products?.length > 0 ? (
+            {adddata?.length > 0 ? (
               <button
                 data-bs-dismiss="offcanvas"
                 onClick={() => {
@@ -400,7 +405,7 @@ export function Navbar({
                 }}
                 className="btn btn-primary "
               >
-                checkout
+                Checkout
               </button>
             ) : (
               ""
