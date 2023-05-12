@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -23,6 +23,7 @@ import { Editaddress } from "./Editaddress";
 import { Forgotpage } from "./login/Forgotpage";
 import { ConfirmPassword } from "./login/ConfirmPassword";
 import { FeedBack } from "./FeedBack";
+import { FeedbackPage } from "./admincomponents/FeedbackPage";
 
 function App() {
   const [adddata, setadddata] = useState([]);
@@ -30,7 +31,6 @@ function App() {
   const [price, setprice] = useState();
   const [quantity, setquantity] = useState();
   const [navbarclr, setnavbarclr] = useState("home");
-
 
   return (
     <div className="App">
@@ -65,12 +65,7 @@ function App() {
         <Route path="/forgotpage" element={<Forgotpage />} />
         <Route
           path="/product"
-          element={
-            <Product
-              adddata={adddata}
-              setadddata={setadddata}
-            />
-          }
+          element={<Product adddata={adddata} setadddata={setadddata} />}
         />
 
         <Route
@@ -150,6 +145,14 @@ function App() {
             <ProtectedRoutAdminPageUsers>
               <AdminuserPageUsers />
             </ProtectedRoutAdminPageUsers>
+          }
+        />
+        <Route
+          path="/feedback"
+          element={
+            <ProtectedRoutefeedback>
+              <FeedbackPage />
+            </ProtectedRoutefeedback>
           }
         />
         <Route
@@ -271,6 +274,13 @@ function ProtectedRouteMyorder({ children }) {
 }
 function ProtectedRouteEditaddress({ children }) {
   return localStorage.getItem("token") ? (
+    <section>{children}</section>
+  ) : (
+    <Navigate to="/" />
+  );
+}
+function ProtectedRoutefeedback({ children }) {
+  return localStorage.getItem("adtoken") ? (
     <section>{children}</section>
   ) : (
     <Navigate to="/" />

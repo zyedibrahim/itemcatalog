@@ -20,24 +20,24 @@ export function Navbar({
 
   const handleIncrement = (data) => {
     const filterdata = adddata.findIndex((ele) => ele._id === data._id);
-    const newProducts = [...adddata];
-    const newProductsprice = [...adddata];
-
+    const newProducts = JSON.parse(JSON.stringify(products));
+    const price =
+      newProducts[filterdata].price / newProducts[filterdata].quantity; // original price value
     newProducts[filterdata].quantity += 1;
-    newProducts[filterdata].price =
-      newProducts[filterdata].price + newProductsprice[filterdata].price;
-
-    setadddata(newProducts);
+    newProducts[filterdata].price = price * newProducts[filterdata].quantity; // calculate updated price
+    setProducts(newProducts);
   };
 
   const handleDecrement = (data) => {
     const filterdata = adddata.findIndex((ele) => ele._id === data._id);
-    const newProducts = [...adddata];
-    const newProductsprice = [...adddata];
+    const newProducts = JSON.parse(JSON.stringify(products));
+    const price =
+      newProducts[filterdata].price / newProducts[filterdata].quantity; // original price value
     if (newProducts[filterdata].quantity > 1) {
       newProducts[filterdata].quantity -= 1;
-      newProducts[filterdata].price = newProducts[filterdata].price - 200;
-      setadddata(newProducts);
+      const decrement = price - newProducts[filterdata].price;
+      newProducts[filterdata].price = decrement;
+      setProducts(newProducts);
     }
   };
 
@@ -64,15 +64,20 @@ export function Navbar({
   };
 
   const filterdel = (data, index) => {
-    const dataddd = products?.filter((ele) => ele._id !== data._id);
-    // cartdata
-    const dataad = adddata?.filter(
-      (ele) => ele._id !== data._id,
-      (data.price = 0)
-    );
+    const pricedata = [{ ...data }];
 
-    setProducts(dataddd);
-    setadddata(dataad);
+    const dataddd = adddata?.filter(
+      (ele) => ele._id !== data._id,
+      (data.price = pricedata[0].price),
+      (data.quantity = 1)
+    );
+    // cartdata
+    // const dataad = adddata?.filter(
+    //   (ele) => ele._id !== data._id,
+    //   (data.price = 0)
+    // );
+
+    setadddata(dataddd);
   };
 
   return (
@@ -229,6 +234,28 @@ export function Navbar({
               ) : (
                 ""
               )}
+              {localStorage.getItem("adtoken") ? (
+                <li className="nav-item ">
+                  <Link
+                    onClick={() => setnavbarclr("feedback")}
+                    className={`nav-link ${
+                      navbarclr === "feedback" ? "clr-org" : "text-white"
+                    } `}
+                    aria-current="page_feedback"
+                    to="/feedback"
+                  >
+                    <i
+                      style={{
+                        color: navbarclr === "feedback" ? "orange" : "#fafafa",
+                      }}
+                      className="me-2 fa-solid fa-comments"
+                    ></i>
+                    FeedBack
+                  </Link>
+                </li>
+              ) : (
+                ""
+              )}
             </ul>
           </div>
 
@@ -328,8 +355,8 @@ export function Navbar({
         </div>
         <div className="offcanvas-body mb-3">
           <div className="mb-3">
-            {adddata?.length > 0 ? (
-              adddata?.map((ele, index) => {
+            {products?.length > 0 ? (
+              products?.map((ele, index) => {
                 return (
                   <div key={ele._id}>
                     <div className="card mb-3">
@@ -375,7 +402,9 @@ export function Navbar({
                             <div className="d-flex justify-content-between card-text">
                               {" "}
                               Rs:-
-                              <div className="text-muted">{ele.price}</div>
+                              <div className="text-muted">
+                                {Math.abs(ele.price.toFixed(2))}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -388,16 +417,16 @@ export function Navbar({
               <h1 className="text-muted"> Cart is Empty </h1>
             )}
           </div>
-          {adddata?.length ? (
+          {products?.length ? (
             <div className="d-flex justify-content-end">
-              <div> Total Rs:- {totalPri}</div>
+              <div> Total Rs:- {Math.abs(totalPri.toFixed(2))}</div>
             </div>
           ) : (
             ""
           )}
 
           <div className="mb-3">
-            {adddata?.length > 0 ? (
+            {products?.length > 0 ? (
               <button
                 data-bs-dismiss="offcanvas"
                 onClick={() => {

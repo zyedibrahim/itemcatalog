@@ -69,7 +69,7 @@ function UpdateCatagories({ eachdata }) {
   return (
     <div className="container">
       <div className="row mt-5 d-flex justify-content-center">
-        <div className="col-12 col-md- col-lg-5 col-xl-5">
+        <div className="col-10 col-md-6 col-lg-4 col-xl-4">
           <div className="card">
             <div className="card-header">
               <div className="card-text text-center">Edit Catagories</div>
@@ -77,7 +77,7 @@ function UpdateCatagories({ eachdata }) {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="row">
-                  <div className="col-12 col-md-6">
+                  <div className="col-12">
                     <div className="mb-3">
                       <input
                         onChange={handleChange}
@@ -95,7 +95,7 @@ function UpdateCatagories({ eachdata }) {
                   </div>
                 </div>
 
-                <div className="modal-footer">
+                <div className="modal-footer gap-2">
                   <button type="submit" className="btn btn-success">
                     Update
                   </button>

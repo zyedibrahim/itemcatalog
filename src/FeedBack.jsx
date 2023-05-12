@@ -31,7 +31,7 @@ export function FeedBack({ setnavbarclr, navbarclr }) {
     },
   });
 
-  const feedback = async (data) => {
+   const feedback = async (data) => {
     await fetch(`${API}/feedback`, {
       method: "POST",
       body: JSON.stringify(data),

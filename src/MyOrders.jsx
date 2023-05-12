@@ -69,7 +69,8 @@ export function MyOrders() {
                                   Delivery Date : {ele.date?.slice(0, 10)}{" "}
                                 </span>
                                 <h6 className="card-text mt-2 mb-3">
-                                  <span>Payment Mode :</span> {ele.payment}
+                                  <span>Payment Mode :</span>{" "}
+                                  {ele.payment.toUpperCase()}
                                 </h6>
                               </h5>
                             </small>

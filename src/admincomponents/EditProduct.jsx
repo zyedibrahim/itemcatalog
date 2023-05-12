@@ -87,7 +87,7 @@ function UpdateProduct({ eachdata }) {
   return (
     <div className="container">
       <div className="row mt-5 d-flex justify-content-center">
-        <div className="col-12 col-md- col-lg-5 col-xl-5">
+        <div className="col-11 col-md-7 col-lg-5 col-xl-5">
           <div className="card">
             <div className="card-header">
               <div className="card-text text-center">Edit Product</div>
@@ -230,7 +230,7 @@ function UpdateProduct({ eachdata }) {
                   </div>
                 </div>
 
-                <div className="modal-footer">
+                <div className="modal-footer gap-2">
                   <button type="submit" className="btn btn-success">
                     Update
                   </button>

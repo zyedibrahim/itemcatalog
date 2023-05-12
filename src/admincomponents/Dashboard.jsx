@@ -24,10 +24,12 @@ export function Dashboard() {
     (total, product) => total + product.sold,
     0
   );
-  const outofstock = apidata?.reduce((total, product) => {
-    if (product.stock === 0) {
-      return total + product.stock;
+
+  const outofstock = apidata?.reduce((total, curr) => {
+    if (curr.stock === 0) {
+      return total + 1;
     }
+    return total;
   }, 0);
 
   const [searchquery, setsearchquery] = useState("");
@@ -41,7 +43,7 @@ export function Dashboard() {
   return (
     <div className="text-white container">
       <div className="row mb-3 mt-5">
-        <div className="col-12 col-md-3 mb-3">
+        <div className="col-12 col-md-6 col-lg-4  col-xxl-3 mb-3">
           <div className="card text-white p-3 bg-info">
             <div className="card-body">
               <div className="card-title text-center">
@@ -51,7 +53,7 @@ export function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-12 mb-3 col-md-3">
+        <div className="col-12 mb-3 col-sm-6 col-md-6 col-lg-4 col-xxl-3">
           <div className="card text-white p-3 bg-secondary">
             <div className="card-body">
               <div className="card-title">
@@ -61,7 +63,7 @@ export function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-12 mb-3 col-md-3">
+        <div className="col-12 col-sm-6 mb-3 col-md-6  col-lg-4 col-xxl-3">
           <div className="card text-white p-3 bg-primary">
             <div className="card-body">
               <div className="card-title">
@@ -71,17 +73,17 @@ export function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-12 mb-3 col-md-3">
+        <div className="col-12 col-sm-6 mb-3 col-md-6  col-lg-4 col-xxl-3 ">
           <div className="card text-white p-3 bg-danger">
             <div className="card-body">
               <div className="card-title">
                 <h4 className="text-center card-text">Out of Stock</h4>
-                <h4 className="text-center card-text"></h4>
+                <h4 className="text-center card-text">{outofstock}</h4>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-12 mb-3 col-md-3">
+        <div className="col-12 col-sm-6 mb-3 col-md-6  col-lg-4 col-xxl-3 ">
           <div className="card text-center text-white p-3 bg-success">
             <div className="card-body">
               <div className="card-title">

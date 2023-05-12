@@ -24,15 +24,6 @@ export function AdminuserPageUsers() {
   const navigate = useNavigate();
 
   const [alldataorder, setalldataorder] = useState([]);
-  const adddress = alldataorder.newdata;
-  let datestore = "";
-  const datedel = alldataorder.newdata;
-
-  datestore = datedel;
-  console.log(datestore, "datasore");
-
-  console.log(datedel, "date");
-  console.log(orderdata, "outside-orderdata");
 
   const getdataorder = async () => {
     if (nxtpage === "false") {
@@ -143,7 +134,11 @@ export function AdminuserPageUsers() {
             onClick={() => setnxtpage("true")}
           >
             {" "}
-            back{" "}
+            <i
+              className="me-2 fa-solid fa-arrow-left"
+              style={{ color: "#ffffff" }}
+            ></i>{" "}
+            Back{" "}
           </button>
 
           <div className="row ">

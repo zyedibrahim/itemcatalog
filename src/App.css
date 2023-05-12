@@ -89,10 +89,10 @@ height: 350px;
 
 
 .card-img-pro{
-    object-fit: contain;
-height: 350px;
+    object-fit: cover;
+height: 280px;
 object-fit: contain;
-width: 100%;
+width: 270px
 
 
 }
@@ -253,4 +253,19 @@ object-fit: contain;
   }
   .comment{
     cursor: pointer;
+  }
+
+
+  .loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
