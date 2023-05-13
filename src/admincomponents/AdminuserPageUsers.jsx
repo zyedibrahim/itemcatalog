@@ -59,7 +59,7 @@ export function AdminuserPageUsers() {
   };
 
   return (
-    <div className="container">
+    <div className="container ">
       {nxtpage !== "false" ? (
         <div>
           <div className="row mt-5 mb-3 d-flex justify-content-center">
@@ -152,7 +152,7 @@ export function AdminuserPageUsers() {
           </div>
         </div>
       ) : (
-        <div className="text-white">
+        <div className="text-white mb-order">
           <button
             className="btn mb-3 mt-3 btn-primary"
             onClick={() => setnxtpage("true")}
@@ -164,7 +164,9 @@ export function AdminuserPageUsers() {
             ></i>{" "}
             Back{" "}
           </button>
-
+          <div className="mb-4">
+            <div className="h1 text-center">Contacts Details</div>
+          </div>
           <div className="row d-flex justify-content-center ">
             <div className="col-10">
               <div className="row mb-3 d-flex justify-content-center">
@@ -292,7 +294,7 @@ export function AdminuserPageUsers() {
                       );
                     })
                   ) : (
-                    <div className="h1  d-flex justify-content-center">
+                    <div className="h1 d-flex justify-content-center">
                       <div>Theres No Orders</div>
                     </div>
                   )}
