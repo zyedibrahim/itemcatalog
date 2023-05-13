@@ -71,11 +71,6 @@ export function Navbar({
       (data.price = pricedata[0].price),
       (data.quantity = 1)
     );
-    // cartdata
-    // const dataad = adddata?.filter(
-    //   (ele) => ele._id !== data._id,
-    //   (data.price = 0)
-    // );
 
     setadddata(dataddd);
   };
@@ -84,7 +79,7 @@ export function Navbar({
     <div>
       <nav className="navbar navbar-expand-lg bg-success">
         <div className="container">
-          <Link className="nav-font navbar-brand text-white" href="#">
+          <Link className="nav-font navbar-brand text-white" href="/home">
             <i className="icon-shop me-2  fas fa-shopping-basket"></i>
             Go-kart
           </Link>

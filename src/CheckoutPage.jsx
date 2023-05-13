@@ -20,6 +20,11 @@ const formvalidationschemaaddress = yup.object({
 export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
   const navigate = useNavigate();
   const [cprouduct, setcproduct] = useState([cartitem]);
+  const [editdtstr, seteditdtstr] = useState();
+  const [nxtpage, setnxtpage] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const buttonRef = useRef(null);
+  const [placeloading, setplaceloading] = useState(true);
 
   const getid = localStorage.getItem("_id");
   const [address, setaddress] = useState([]);
@@ -30,8 +35,6 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
       .catch((err) => console.log(err));
   };
 
-  const [editdtstr, seteditdtstr] = useState();
-
   useEffect(() => {
     getdata();
   }, []);
@@ -39,8 +42,6 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
   useEffect(() => {
     setcproduct(cartitem);
   }, [cartitem]);
-
-  const [nxtpage, setnxtpage] = useState(false);
 
   const {
     values,
@@ -66,8 +67,6 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
       storeaddressindb(data);
     },
   });
-  const [showButton, setShowButton] = useState(false);
-  const buttonRef = useRef(null);
 
   const storeaddressindb = async (data) => {
     const idfrmstr = localStorage.getItem("_id");
@@ -158,6 +157,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
               seteditdtstr={seteditdtstr}
               setorderpage={setorderpage}
               getdata={getdata}
+              setplaceloading={setplaceloading}
             />
           </div>
         </div>
@@ -360,48 +360,64 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
     )
   ) : (
     <div className="container">
-      <div className="wrp">
-        <div className="row-con mt-3 mb-3 d-flex justify-content-center ">
-          <div className="col-10">
-            <div className="card text-center ">
-              <div className="card-body">
-                <div className="h1">
-                  <h1>Continue shoping ! </h1>
-                  <div className="h5 text-muted">Order Date</div>
-                  <div className="h4">
-                    <p>
-                      {weekday}, {month} {day}, {year}
-                    </p>
-                    <p>
-                      {hour}:{minute}:{second} {dayPeriod}
-                    </p>
-                  </div>
-                  <div className="card-title mb-3 mt-3">
-                    <i
-                      className="fa-solid fa-circle-check"
-                      style={{ color: "#47e159" }}
-                    ></i>
-                  </div>
-                  <div className="text-muted mt-3 mb-3">
-                    <div className="card-text h5 ">
-                      Track Id :{cprouduct[0]?._id}
+      {placeloading ? (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div className="loader"></div>
+          </div>
+          <div className="text-center mt-3 text-white h1">Order Is Placing</div>
+          <div className="text-center mt-3 text-white h3">Please Wait ...</div>
+        </div>
+      ) : (
+        <div className="wrp">
+          <div className="row-con mt-3 mb-3 d-flex justify-content-center ">
+            <div className="col-10">
+              <div className="card text-center ">
+                <div className="card-body">
+                  <div className="h1">
+                    <h1>Continue shoping ! </h1>
+                    <div className="h5 text-muted">Order Date</div>
+                    <div className="h4">
+                      <p>
+                        {weekday}, {month} {day}, {year}
+                      </p>
+                      <p>
+                        {hour}:{minute}:{second} {dayPeriod}
+                      </p>
                     </div>
-                  </div>
-                  <div className="btn-con mb-3">
-                    <button
-                      onClick={() => orderpagefun()}
-                      className="btn btn-success"
-                    >
-                      Continue Shopping
-                      <i className="fa-solid ms-2 fa-arrow-right"></i>
-                    </button>
+                    <div className="card-title mb-3 mt-3">
+                      <i
+                        className="fa-solid fa-circle-check"
+                        style={{ color: "#47e159" }}
+                      ></i>
+                    </div>
+                    <div className="text-muted mt-3 mb-3">
+                      <div className="card-text h5 ">
+                        Track Id :{cprouduct[0]?._id}
+                      </div>
+                    </div>
+                    <div className="btn-con mb-3">
+                      <button
+                        onClick={() => orderpagefun()}
+                        className="btn btn-success"
+                      >
+                        Continue Shopping
+                        <i className="fa-solid ms-2 fa-arrow-right"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -419,6 +435,7 @@ function Addadressfun({
   seteditdtstr,
   setorderpage,
   getdata,
+  setplaceloading,
 }) {
   const localstoragedata = localStorage.getItem("cartitem");
   const items = JSON.parse(localstoragedata) || [];
@@ -470,6 +487,9 @@ function Addadressfun({
 
     if (temp === "200 ok") {
       setorderpage(true);
+      setTimeout(() => {
+        setplaceloading(false);
+      }, 3000);
       localStorage.removeItem("cartitem");
     }
   };
