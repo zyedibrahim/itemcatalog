@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { API } from "../data";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 export function AdminuserPageUsers() {
   const [alldata, setalldata] = useState();
@@ -27,30 +27,31 @@ export function AdminuserPageUsers() {
   useEffect(() => {
     getdata();
   }, []);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const getdataorder = async () => {
-    if (nxtpage === "false") {
-      try {
-        await fetch(`${API}/alluser/accounts/${orderdata._id}`, {
-          method: "GET",
-          headers: {
-            "x-auth-token": localStorage.getItem("adtoken"),
-          },
-        })
-          .then((data) => data.json())
-          .then((data) => {
-            setalldataorder(data);
-          })
-          .catch((err) => console.log(err));
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
-  useEffect(() => {
-    getdataorder();
-  }, []);
+  // const getdataorder = async () => {
+  //   if (nxtpage === "false") {
+  //     try {
+  //       await fetch(`${API}/alluser/accounts/${orderdata?._id}`, {
+  //         method: "GET",
+  //         headers: {
+  //           "x-auth-token": localStorage.getItem("adtoken"),
+  //         },
+  //       })
+  //         .then((data) => data.json())
+  //         .then((data) => {
+  //           setalldataorder(data);
+  //           console.log("orderdata fetched");
+  //         })
+  //         .catch((err) => console.log(err));
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  // };
+  // useEffect(() => {
+  //   getdataorder();
+  // }, []);
 
   const [searchquery, setsearchquery] = useState("");
   const handlechangeserach = (e) => {
@@ -120,7 +121,7 @@ export function AdminuserPageUsers() {
                         })
                         .map((ele, index) => {
                           return (
-                            <tr key={index} className="text-center">
+                            <tr key={ele._id} className="text-center">
                               <th scope="row">{index + 1}</th>
                               <td>{ele.username}</td>
                               <td>{ele.email}</td>
@@ -131,7 +132,8 @@ export function AdminuserPageUsers() {
                                     onClick={() => {
                                       setorderdata(ele);
                                       setnxtpage("false");
-                                      console.log(orderdata, "addressa");
+                                      setalldataorder(ele.orders);
+                                      console.log(ele);
                                     }}
                                     className="btn btn-info"
                                   >
@@ -196,7 +198,7 @@ export function AdminuserPageUsers() {
                   orderdata?.address?.map((ele) => {
                     return (
                       <div
-                        key={ele._id}
+                        key={ele.id}
                         className=" text-center col-9  col-md-5"
                       >
                         <h6>
@@ -224,16 +226,16 @@ export function AdminuserPageUsers() {
             <div className="row">
               <div className="col-12">
                 <div className="row  d-flex justify-content-center mt-5">
-                  {alldataorder?.newdata ? (
-                    alldataorder?.newdata?.map((ele, index) => {
+                  {alldataorder ? (
+                    alldataorder?.map((ele, index) => {
                       return (
                         <div
-                          key={index}
+                          key={ele._id}
                           className="col-10 col-lg-8  text-white"
                         >
                           <div className="card mb-3">
                             {ele?.orderproduct.map((elein) => (
-                              <div className="row g-0">
+                              <div key={ele._id} className="row  g-0">
                                 <div className="col-md-4 ">
                                   <img
                                     key={elein._id}
