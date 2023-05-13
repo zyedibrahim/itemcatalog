@@ -10,6 +10,7 @@ export const formvalidationschema = yup.object({
 // /products/categories/name
 export function CatagoriesPage() {
   const [apidata, setapidaata] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getdatacatagories = async () => {
     await fetch(`${API}/products/categories/name/all`, {
@@ -21,6 +22,7 @@ export function CatagoriesPage() {
       .then((data) => data.json())
       .then((data) => {
         setapidaata(data);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   };
@@ -96,7 +98,7 @@ export function CatagoriesPage() {
       <div className="row mb-4 mt-5 d-flex justify-content-center ">
         <div className="col-10 col-lg-4 col-md-5 ">
           <div>
-            <div className="input-group input-w input-group-md mb-3">
+            <div className="input-group  input-group-md mb-3">
               <span className="input-group-text" id="basic-addon1">
                 Search
               </span>
@@ -115,7 +117,7 @@ export function CatagoriesPage() {
           <button
             data-bs-toggle="modal"
             data-bs-target="#staticBackdrop1"
-            className="btn w-100 btn-success"
+            className="btn p-btn-w btn-success"
           >
             Add
           </button>
@@ -123,7 +125,7 @@ export function CatagoriesPage() {
       </div>
       <div className="row">
         <div className="col-12">
-          <div className="table-responsive">
+          <div className="table-responsive mb-5">
             <table className="table  text-light">
               <thead>
                 <tr className="text-center">
@@ -133,7 +135,25 @@ export function CatagoriesPage() {
                 </tr>
               </thead>
               <tbody>
-                {apidata ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan="3">
+                      <div
+                        className="mb-3 mt-5"
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className="loader"></div>
+                      </div>
+                      <div className="text-center mt-3 text-white h2">
+                        Loading ...
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
                   apidata
                     ?.filter((item) => {
                       return searchquery.toLowerCase() === ""
@@ -166,9 +186,22 @@ export function CatagoriesPage() {
                         </tr>
                       );
                     })
-                ) : (
-                  <h1>NO data FOUND</h1>
                 )}
+                {loading === false
+                  ? apidata.filter((item) => {
+                      return searchquery.toLowerCase() === ""
+                        ? item
+                        : item.catagories.toLowerCase().includes(searchquery);
+                    }).length === 0 && (
+                      <tr>
+                        <td colSpan="5">
+                          <h1 className="text-danger text-center">
+                            No Data Found
+                          </h1>
+                        </td>
+                      </tr>
+                    )
+                  : ""}
               </tbody>
             </table>
           </div>
@@ -185,7 +218,7 @@ export function CatagoriesPage() {
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog text-dark mt-d">
+        <div className="modal-dialog modal-dialog-cata text-dark mt-d">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="staticBackdropLabel">
@@ -202,7 +235,7 @@ export function CatagoriesPage() {
             <div className="modal-body">
               <form onSubmit={handleSubmit}>
                 <div className="row">
-                  <div className="col-12 col-md-6">
+                  <div className="col-12">
                     <div className="mb-3">
                       <input
                         onChange={handleChange}

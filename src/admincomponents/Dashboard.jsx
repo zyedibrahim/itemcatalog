@@ -3,11 +3,14 @@ import { API } from "../data";
 
 export function Dashboard() {
   const [apidata, setapidaata] = useState();
-
+  const [loading, setLoading] = useState(true);
   const getdata = async () => {
     await fetch(`${API}/products/all`)
       .then((data) => data.json())
-      .then((data) => setapidaata(data))
+      .then((data) => {
+        setapidaata(data);
+        setLoading(false);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -39,7 +42,6 @@ export function Dashboard() {
     setsearchquery(e.target.value);
   };
 
-  // console.log(totalstock);
   return (
     <div className="text-white container">
       <div className="row mb-3 mt-5">
@@ -111,8 +113,8 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="table-responsive">
-        <table className="table  text-light">
+      <div className="table-responsive mb-5">
+        <table className="table mb-5 text-light">
           <thead>
             <tr className="text-center">
               <th scope="col">#</th>
@@ -123,7 +125,25 @@ export function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {apidata ? (
+            {loading ? (
+              <tr>
+                <td colSpan="5">
+                  <div
+                    className="mb-3 mt-5"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className="loader"></div>
+                  </div>
+                  <div className="text-center mt-3 text-white h2">
+                    Loading ...
+                  </div>
+                </td>
+              </tr>
+            ) : (
               apidata
                 ?.filter((item) => {
                   return searchquery.toString() === ""
@@ -143,11 +163,20 @@ export function Dashboard() {
                     </tr>
                   );
                 })
-            ) : (
-              <tr>
-                <td>There is no Data</td>
-              </tr>
             )}
+            {loading === false
+              ? apidata.filter((item) => {
+                  return searchquery.toString() === ""
+                    ? item
+                    : item.stock.toString().includes(searchquery);
+                }).length === 0 && (
+                  <tr>
+                    <td colSpan="5">
+                      <h1 className="text-danger text-center">No Data Found</h1>
+                    </td>
+                  </tr>
+                )
+              : ""}
           </tbody>
         </table>
       </div>

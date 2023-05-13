@@ -171,7 +171,7 @@ export function CheckoutPage({ cartitem, setcartitem, quantity, setProducts }) {
           aria-labelledby="staticBackdropLabel"
           aria-hidden="true"
         >
-          <div className="modal-dialog text-dark mt-d">
+          <div className="modal-dialog modal-dialog-addres text-dark mt-d">
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="staticBackdropLabel">
@@ -540,6 +540,10 @@ function Addadressfun({
                           Pincode:
                           {ele.pincode}
                         </div>
+                        <div>
+                          Country:
+                          <span className="ms-1">{ele.country}</span>
+                        </div>
                         <div>Phone : {ele.phone}</div>
                       </label>
                       <div className="config-con mt-2 mb-2 d-flex gap-3">
@@ -624,20 +628,33 @@ function Addadressfun({
                 <h1>Loading</h1>
               )}
               <div className="amount-con fs-5">
-                Amount : Rs - : {price[0]?.price}{" "}
+                Amount : Rs - : {Math.abs(price[0]?.price.toFixed(2))}{" "}
               </div>
 
+              {/* <div className="small">Delivery will be Free Rs 500 above </div> */}
               <div className="fs-5 delivery-charge mt-4 d-flex justify-content-end ">
-                <div className="inside-con">Delivery :-Rs: 0</div>
+                <div className="inside-con mt-2 mb-2">Delivery :-Rs: 0</div>
               </div>
               <div className="total fs-3 d-flex mt-2 justify-content-end">
-                <div className="inside-con">Total :- Rs : {totalPri}</div>
+                <div className="inside-con">
+                  Total :- Rs : {Math.abs(totalPri.toFixed(2))}
+                </div>
               </div>
 
               <div className="d-grid mb-3 mt-3">
-                <button type="submit" className="btn btn-secondary">
+                <button type="submit" className="btn mb-3 btn-secondary">
                   <i className="me-2 fa-solid fa-lock"></i>
                   Place Order
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.removeItem("cartitem");
+                    navigate("/product");
+                  }}
+                  className="btn mb-3 btn-danger"
+                >
+                  Cancel Order
                 </button>
               </div>
             </div>

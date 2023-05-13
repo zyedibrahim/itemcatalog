@@ -184,18 +184,38 @@ object-fit: contain;
 }
 
 
-.modal-dialog{
+
+.mt-d{
+  margin-top: 50px;
+}
+
+/* modal custom */
+
+.modal-dialog-address{
     max-width: 60%;
     margin: auto;
 }
 
-.mt-d{
-    margin-top: 50px;
+@media (max-width: 576px) {
+    .modal-dialog-address {
+      max-width: 90%;
+    }
+  }
+
+
+.modal-dialog-cata{
+    max-width: 35%;
+    margin: auto;
 }
 
+@media (max-width: 898px) {
+    .modal-dialog-cata {
+      max-width: 50%;
+    }
+  }
 @media (max-width: 576px) {
-    .modal-dialog {
-      max-width: 90%;
+    .modal-dialog-cata {
+      max-width: 70%;
     }
   }
 
@@ -269,3 +289,12 @@ object-fit: contain;
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+  .p-btn-w{
+    width: 300px;
+  }
+  
+  .catagories-wid{
+    width: 50%;
+  }
+  

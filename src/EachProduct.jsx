@@ -21,19 +21,25 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
 
   const copydata = [...eachdata];
 
-  const handleIncrement = (index) => {
-    const newProducts = [...eachdata];
-    newProducts[index].quantity += 1;
-    newProducts[index].price = newProducts[index].price + copydata[0]?.price;
+  const handleIncrement = (data) => {
+    const filterdata = eachdata.findIndex((ele) => ele._id === data._id);
+    const newProducts = JSON.parse(JSON.stringify(eachdata));
+    const price =
+      newProducts[filterdata].price / newProducts[filterdata].quantity; // original price value
+    newProducts[filterdata].quantity += 1;
+    newProducts[filterdata].price = price * newProducts[filterdata].quantity; // calculate updated price
     seteachdata(newProducts);
   };
 
-  const handleDecrement = (index) => {
-    const newProducts = [...eachdata];
-    if (newProducts[index].quantity > 1) {
-      newProducts[index].quantity -= 1;
-      newProducts[index].price =
-        newProducts[index].price - newProducts[index].price;
+  const handleDecrement = (data) => {
+    const filterdata = eachdata.findIndex((ele) => ele._id === data._id);
+    const newProducts = JSON.parse(JSON.stringify(eachdata));
+    const price =
+      newProducts[filterdata].price / newProducts[filterdata].quantity; // original price value
+    if (newProducts[filterdata].quantity > 1) {
+      newProducts[filterdata].quantity -= 1;
+      const decrement = price - newProducts[filterdata].price;
+      newProducts[filterdata].price = decrement;
       seteachdata(newProducts);
     }
   };
@@ -74,13 +80,15 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
                             Category : {ele.catagories}
                           </div>
                           <div className="card-title">Product : {ele.name}</div>
-                          <div className="card-title">Amount : {ele.price}</div>
+                          <div className="card-title">
+                            Amount : {Math.abs(ele.price.toFixed(2))}
+                          </div>
                           <div className="card-title d-flex gap-2 button">
                             Quantity :{" "}
                             <button
                               className="plus "
                               onClick={() => {
-                                handleIncrement(index);
+                                handleIncrement(ele);
                               }}
                             >
                               +
@@ -89,7 +97,7 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
                             <button
                               className="minus "
                               onClick={() => {
-                                handleDecrement(index);
+                                handleDecrement(ele);
                               }}
                             >
                               -
@@ -113,7 +121,7 @@ export function EachProduct({ cartitem, setcartitem, setprice, setquantity }) {
 
                           <div className="tol">
                             {" "}
-                            Total Amount : {ele.price}{" "}
+                            Total Amount : {Math.abs(ele.price.toFixed(2))}{" "}
                           </div>
                         </div>
                       </div>

@@ -89,9 +89,22 @@ export function Product({ setadddata, adddata }) {
             </div>
           </div>
 
-          <div className="row">
+          <div className="row justify-content-center justify-content-sm-center justify-content-md-start justify-content-lg-start justify-content-xl-start">
             {loading ? (
-              <div className="loader"></div>
+              <div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <div className="loader"></div>
+                </div>
+                <div className="text-center mt-3 text-white h2">
+                  Loading ...
+                </div>
+              </div>
             ) : Ssearch === true ? (
               datafrmapi
                 .filter((item) => {
@@ -168,7 +181,7 @@ function LoopProduct({ setadddata, adddata, ele }) {
   };
 
   return (
-    <div className="d-flex justify-content-center col-md-6 mb-3 col-lg-4 col-xl-3 col-7">
+    <div className="d-flex col-md-6 mb-3 col-lg-4 col-xl-3 col-7">
       <div className="center-con">
         <div className="card" style={{ width: "270px" }}>
           <img src={ele.img_pro} alt="content-img" className="card-img-pro" />

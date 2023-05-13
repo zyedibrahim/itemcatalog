@@ -3,30 +3,42 @@ import { API } from "../data";
 
 export function FeedbackPage() {
   const [feedback, setfeedback] = useState([]);
-  const [isLoading, setisLoding] = useState(false);
+  const [Loading, setLoding] = useState(true);
 
   const getfeedback = async () => {
     const api = await fetch(`${API}/feedback`);
     const conjson = await api.json();
     if (conjson.status === "200 ok") {
       setfeedback(conjson.data);
-      setisLoding(true);
+      setLoding(false);
     }
   };
 
   useEffect(() => {
     getfeedback();
-  }, [isLoading]);
+  }, []);
   return (
     <div className="container">
       <div className="mb-5 text-light">
         <div className="h1 text-center mb-3">FeedBacks</div>
 
-        <div className="row d-flex justify-content-center ">
-          {isLoading === false ? (
-            <h1>loading</h1>
-          ) : (
-            feedback?.map((ele, index) => {
+        {Loading ? (
+          <div
+            className="mb-3 mt-5"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div className="loader"></div>
+            <div className="text-center mt-3 ms-4 text-white h2">
+              Loading ...
+            </div>
+          </div>
+        ) : (
+          <div className="row mt-5 mb-5 justify-content-center justify-content-sm-center justify-content-md-start justify-content-lg-start justify-content-xl-start ">
+            {feedback?.map((ele, index) => {
               return (
                 <div
                   key={ele._id}
@@ -41,9 +53,9 @@ export function FeedbackPage() {
                   </div>
                 </div>
               );
-            })
-          )}
-        </div>
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

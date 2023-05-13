@@ -41,6 +41,9 @@ export function AdminuserProduct() {
   });
 
   const [alldata, setalldata] = useState([]);
+  const [searchquery, setsearchquery] = useState("");
+  const [cata, setcata] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getdata = async () => {
     await fetch(`${API}/products/all`)
@@ -52,8 +55,6 @@ export function AdminuserProduct() {
     getdata();
   }, []);
 
-  const [cata, setcata] = useState([]);
-
   const getdatacatagories = async () => {
     await fetch(`${API}/products/categories/name/all`, {
       headers: {
@@ -61,7 +62,10 @@ export function AdminuserProduct() {
       },
     })
       .then((data) => data.json())
-      .then((data) => setcata(data))
+      .then((data) => {
+        setcata(data);
+        setLoading(false);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -100,8 +104,6 @@ export function AdminuserProduct() {
 
   const navigate = useNavigate();
 
-  const [searchquery, setsearchquery] = useState("");
-
   const handlechangeserach = (e) => {
     setsearchquery(e.target.value);
   };
@@ -121,7 +123,7 @@ export function AdminuserProduct() {
       <div className="row mb-4 mt-5 d-flex justify-content-center ">
         <div className="col-10 col-lg-4 col-md-5 ">
           <div>
-            <div className="input-group input-w input-group-md mb-3">
+            <div className="input-group  input-group-md mb-3">
               <span className="input-group-text" id="basic-addon1">
                 Search
               </span>
@@ -140,7 +142,7 @@ export function AdminuserProduct() {
           <button
             data-bs-toggle="modal"
             data-bs-target="#staticBackdrop"
-            className="btn w-100 btn-success"
+            className="btn p-btn-w btn-success"
           >
             Add Product
           </button>
@@ -164,7 +166,25 @@ export function AdminuserProduct() {
                 </tr>
               </thead>
               <tbody>
-                {alldata ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan="8">
+                      <div
+                        className="mb-3 mt-5"
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className="loader"></div>
+                      </div>
+                      <div className="text-center mt-3 text-white h2">
+                        Loading ...
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
                   alldata
                     .filter((item) => {
                       return searchquery.toLowerCase() === ""
@@ -211,9 +231,22 @@ export function AdminuserProduct() {
                         </tr>
                       );
                     })
-                ) : (
-                  <h1>NO data found </h1>
                 )}
+                {loading === false
+                  ? alldata?.filter((item) => {
+                      return searchquery.toLowerCase() === ""
+                        ? item
+                        : item.name.toLowerCase().includes(searchquery);
+                    }).length === 0 && (
+                      <tr>
+                        <td colSpan="8">
+                          <h1 className="text-danger text-center">
+                            No Data Found
+                          </h1>
+                        </td>
+                      </tr>
+                    )
+                  : ""}
               </tbody>
             </table>
           </div>

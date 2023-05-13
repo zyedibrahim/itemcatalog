@@ -7,6 +7,9 @@ export function AdminuserPageUsers() {
   const [alldata, setalldata] = useState();
   const [nxtpage, setnxtpage] = useState(false);
   const [orderdata, setorderdata] = useState();
+  const [alldataorder, setalldataorder] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const getdata = async () => {
     await fetch(`${API}/alluser/accounts`, {
       method: "GET",
@@ -15,15 +18,16 @@ export function AdminuserPageUsers() {
       },
     })
       .then((data) => data.json())
-      .then((data) => setalldata(data.array))
+      .then((data) => {
+        setalldata(data.array);
+        setLoading(false);
+      })
       .catch((err) => console.log(err));
   };
   useEffect(() => {
     getdata();
   }, []);
   const navigate = useNavigate();
-
-  const [alldataorder, setalldataorder] = useState([]);
 
   const getdataorder = async () => {
     if (nxtpage === "false") {
@@ -35,7 +39,9 @@ export function AdminuserPageUsers() {
           },
         })
           .then((data) => data.json())
-          .then((data) => setalldataorder(data, "order adimign"))
+          .then((data) => {
+            setalldataorder(data);
+          })
           .catch((err) => console.log(err));
       } catch (err) {
         console.log(err);
@@ -44,7 +50,7 @@ export function AdminuserPageUsers() {
   };
   useEffect(() => {
     getdataorder();
-  }, [nxtpage]);
+  }, []);
 
   const [searchquery, setsearchquery] = useState("");
   const handlechangeserach = (e) => {
@@ -75,8 +81,8 @@ export function AdminuserPageUsers() {
 
           <div className="row">
             <div className="col-12">
-              <div className="table-responsive">
-                <table className="table  text-light">
+              <div className="table-responsive mb-5">
+                <table className="table mb-5 text-light">
                   <thead>
                     <tr className="text-center">
                       <th scope="col">#</th>
@@ -87,7 +93,25 @@ export function AdminuserPageUsers() {
                     </tr>
                   </thead>
                   <tbody>
-                    {alldata ? (
+                    {loading ? (
+                      <tr>
+                        <td colSpan="5">
+                          <div
+                            className="mb-3 mt-5"
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <div className="loader"></div>
+                          </div>
+                          <div className="text-center mt-3 text-white h2">
+                            Loading ...
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
                       alldata
                         ?.filter((item) => {
                           return searchquery.toLowerCase() === ""
@@ -118,8 +142,6 @@ export function AdminuserPageUsers() {
                             </tr>
                           );
                         })
-                    ) : (
-                      <h1>No Data Found</h1>
                     )}
                   </tbody>
                 </table>
@@ -141,7 +163,7 @@ export function AdminuserPageUsers() {
             Back{" "}
           </button>
 
-          <div className="row ">
+          <div className="row d-flex justify-content-center ">
             <div className="col-10">
               <div className="row mb-3 d-flex justify-content-center">
                 <div className="text-center col-10 col-md-6">
@@ -268,7 +290,9 @@ export function AdminuserPageUsers() {
                       );
                     })
                   ) : (
-                    <h1 className="text-center">Theres No Orders</h1>
+                    <div className="h1  d-flex justify-content-center">
+                      <div>Theres No Orders</div>
+                    </div>
                   )}
                 </div>
               </div>
