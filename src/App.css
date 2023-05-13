@@ -300,4 +300,27 @@ object-fit: contain;
   
 
 
+/* .login-con{
+  background-image: url(https://images.pexels.com/photos/2733918/pexels-photo-2733918.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+background-attachment: fixed;
 
+}
+.create-con{
+  background-image: url(https://images.pexels.com/photos/2733918/pexels-photo-2733918.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;
+margin-bottom:100px;
+background-attachment: fixed;
+
+}
+.create-con-padd{
+  padding-bottom: 124px;
+} */
+
+.create-con{
+  margin-bottom: 100px;
+}

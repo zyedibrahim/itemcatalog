@@ -74,7 +74,7 @@ export function Login() {
 
   const [check, setcheck] = useState("false");
   return (
-    <div>
+    <div className="login-con">
       <div className="container">
         <div className=" row d-flex justify-content-center">
           <div className="cen shadow-lg col-11 col-md-6 col-lg-4 col-xl-4 card mt-5">
@@ -99,39 +99,6 @@ export function Login() {
                   role="tabpanel"
                   aria-labelledby="tab-login"
                 >
-                  <div className="text-center mb-3">
-                    <p>Sign in with:</p>
-                    <button
-                      type="button"
-                      className="btn btn-link btn-floating mx-1"
-                    >
-                      <i className="fab fa-facebook-f"></i>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-link btn-floating mx-1"
-                    >
-                      <i className="fab fa-google"></i>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-link btn-floating mx-1"
-                    >
-                      <i className="fab fa-twitter"></i>
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-link btn-floating mx-1"
-                    >
-                      <i className="fab fa-github"></i>
-                    </button>
-                  </div>
-
-                  <p className="text-center">or:</p>
-
                   <div className="form-outline mb-4">
                     <label className="form-label" htmlFor="loginName">
                       Email or username
@@ -185,12 +152,14 @@ export function Login() {
                     </div>
                   </div>
 
-                  <button
-                    type="submit"
-                    className="btn btn-primary btn-block mb-4"
-                  >
-                    Sign in
-                  </button>
+                  <div className="d-grid">
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-block mb-4"
+                    >
+                      Sign in
+                    </button>
+                  </div>
 
                   <div className="text-center">
                     <p>
