@@ -32,8 +32,6 @@ export function Createuser() {
       },
       validationSchema: formvalidationschema,
       onSubmit: async (values) => {
-        console.log(values);
-
         signup(values);
       },
     });
@@ -51,12 +49,13 @@ export function Createuser() {
     const conjson = await api.json();
 
     const status = await conjson.status;
-    console.log(status);
+
     if (status === "200 ok") {
       notifysuccess("OTP Sent On Register Email Address");
       localStorage.setItem("otpverfyroute", otpverfyroute);
-
-      navigate("/otpverify");
+      setTimeout(() => {
+        navigate("/otpverify");
+      }, 3000);
     } else {
       notifyfail(status);
     }
@@ -162,6 +161,7 @@ export function Createuser() {
           </div>
         </div>
       </div>
+      <ToastContainer autoClose={2000} limit={1} />
     </div>
   );
 }

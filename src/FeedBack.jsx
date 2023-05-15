@@ -31,7 +31,7 @@ export function FeedBack({ setnavbarclr, navbarclr }) {
     },
   });
 
-   const feedback = async (data) => {
+  const feedback = async (data) => {
     await fetch(`${API}/feedback`, {
       method: "POST",
       body: JSON.stringify(data),
@@ -124,7 +124,7 @@ export function FeedBack({ setnavbarclr, navbarclr }) {
             </div>
           </form>
         </div>
-        <ToastContainer />
+        <ToastContainer autoClose={1000} />
       </div>
     </div>
   );

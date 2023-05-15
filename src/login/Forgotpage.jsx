@@ -73,7 +73,7 @@ export function Forgotpage() {
                   <button type="submit" className="btn btn-primary">
                     Send
                   </button>
-                  <ToastContainer />
+                  <ToastContainer autoClose={2000} limit={1} />
                   <div className="d-flex justify-content-between">
                     <Link to="/login" className="mt-1 text-decoration-none">
                       Login

@@ -49,7 +49,7 @@ export function ConfirmPassword() {
         successnotify(data.status);
         setTimeout(() => {
           navigate("/");
-        }, 2000);
+        }, 3000);
       });
   }
 
@@ -101,7 +101,7 @@ export function ConfirmPassword() {
                     Make Sure Password Must Be Strong ?
                   </div>
                 </div>
-                <ToastContainer />
+                <ToastContainer autoClose={2000} limit={1} />
               </form>
             </div>
           </div>
