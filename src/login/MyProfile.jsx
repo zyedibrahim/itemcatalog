@@ -238,7 +238,7 @@ function UpdatePassword() {
           </div>
         </div>
       </form>
-      <ToastContainer />
+      <ToastContainer autoClose={2000} limit={1} />
     </div>
   );
 }
