@@ -75,8 +75,8 @@ export function CatagoriesPage() {
     }
   }, [showButton]);
 
-  const deletefun = (dataid) => {
-    fetch(`${API}/products/categories/name/all/${dataid}`, {
+  const deletefun = async (dataid) => {
+    await fetch(`${API}/products/categories/name/all/${dataid}`, {
       method: "DELETE",
       headers: {
         "x-auth-token": localStorage.getItem("adtoken"),
